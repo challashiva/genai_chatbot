@@ -30,7 +30,7 @@ export async function streamChat({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages, system_prompt: systemPrompt }),
     })
-
+    debugger;
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`)
     }

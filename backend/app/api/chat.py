@@ -25,9 +25,18 @@ async def chat_stream(request: ChatRequest):
     - Auto-reconnects on disconnect
     - Perfect for AI streaming (you never need to stream *to* the server)
     """
+    max_message_length =100
 
     async def generate():
         try:
+            if not request.messages:
+                raise Exception("Messages cannot be empty")
+
+            
+            print(len(request.messages))
+            if len(request.messages) > max_message_length:
+                raise Exception("Messages cannot be greater than 2000 characters")
+            
             async for chunk in stream_chat_response(
                 messages=request.messages,
                 system_prompt=request.system_prompt,

@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Chatbot — Complete Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,wght@0,300;0,700;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f14;
+    --surface: #161820;
+    --surface2: #1e2028;
+    --border: #2a2d3a;
+    --accent: #5b8af5;
+    --accent2: #f5a623;
+    --accent3: #4ecb8d;
+    --accent4: #e05c8a;
+    --text: #d4d8e8;
+    --text-dim: #7a7f9a;
+    --text-bright: #eef0f8;
+    --code-bg: #12131a;
+    --tag-py: #3a7bd5;
+    --tag-react: #00b4d8;
+    --tag-groq: #7c3aed;
+    --tag-concept: #059669;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-logo .title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1.2;
+  }
+
+  .sidebar-logo .subtitle {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .nav-section {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    padding: 0 20px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 20px;
+    font-size: 13px;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+  }
+
+  .nav-item:hover { color: var(--text-bright); background: var(--surface2); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(91,138,245,0.07); }
+  .nav-item .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Main content ── */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+    padding: 48px 56px;
+    max-width: 1000px;
+  }
+
+  /* ── Section ── */
+  .section { display: none; animation: fadeIn 0.25s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Typography ── */
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--text-bright);
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin: 40px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-bright);
+    margin: 24px 0 8px;
+    letter-spacing: 0.02em;
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+
+  .lead {
+    font-size: 17px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .tag-py { background: rgba(58,123,213,0.2); color: #7ab3f5; border: 1px solid rgba(58,123,213,0.3); }
+  .tag-react { background: rgba(0,180,216,0.15); color: #5dd6f5; border: 1px solid rgba(0,180,216,0.25); }
+  .tag-groq { background: rgba(124,58,237,0.2); color: #b89cf5; border: 1px solid rgba(124,58,237,0.3); }
+  .tag-concept { background: rgba(5,150,105,0.15); color: #4fd1a5; border: 1px solid rgba(5,150,105,0.25); }
+  .tag-warn { background: rgba(245,166,35,0.15); color: #f5c76a; border: 1px solid rgba(245,166,35,0.25); }
+
+  /* ── Code blocks ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .code-header .filename { color: var(--text-bright); font-weight: 500; }
+
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  /* Syntax highlighting */
+  .kw { color: #c792ea; }
+  .fn { color: #82aaff; }
+  .str { color: #c3e88d; }
+  .cm { color: #546e7a; font-style: italic; }
+  .num { color: #f78c6c; }
+  .cls { color: #ffcb6b; }
+  .dec { color: #89ddff; }
+  .op { color: #89ddff; }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-left: 3px solid;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .callout-info { background: rgba(91,138,245,0.08); border-color: var(--accent); }
+  .callout-info .callout-title { color: var(--accent); }
+
+  .callout-tip { background: rgba(78,203,141,0.08); border-color: var(--accent3); }
+  .callout-tip .callout-title { color: var(--accent3); }
+
+  .callout-warn { background: rgba(245,166,35,0.08); border-color: var(--accent2); }
+  .callout-warn .callout-title { color: var(--accent2); }
+
+  .callout-alt { background: rgba(224,92,138,0.08); border-color: var(--accent4); }
+  .callout-alt .callout-title { color: var(--accent4); }
+
+  .callout-title { font-weight: 500; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ── Architecture diagram ── */
+  .arch-diagram {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    margin: 24px 0;
+    overflow-x: auto;
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin: 6px 0;
+    flex-wrap: wrap;
+  }
+
+  .arch-box {
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 140px;
+    line-height: 1.3;
+  }
+
+  .arch-box small {
+    display: block;
+    font-size: 10px;
+    font-weight: 300;
+    opacity: 0.7;
+    margin-top: 3px;
+  }
+
+  .arch-box.blue { background: rgba(91,138,245,0.15); border: 1px solid rgba(91,138,245,0.4); color: #7ab3f5; }
+  .arch-box.teal { background: rgba(78,203,141,0.12); border: 1px solid rgba(78,203,141,0.35); color: #4ecb8d; }
+  .arch-box.amber { background: rgba(245,166,35,0.12); border: 1px solid rgba(245,166,35,0.35); color: #f5c76a; }
+  .arch-box.purple { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.4); color: #b89cf5; }
+  .arch-box.pink { background: rgba(224,92,138,0.12); border: 1px solid rgba(224,92,138,0.35); color: #e8809e; }
+  .arch-box.gray { background: rgba(122,127,154,0.12); border: 1px solid rgba(122,127,154,0.3); color: var(--text-dim); }
+
+  .arch-arrow {
+    font-size: 18px;
+    color: var(--text-dim);
+    padding: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .arch-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: center;
+    margin: 2px 0 6px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Q&A ── */
+  .qa-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .qa-item:hover { border-color: rgba(91,138,245,0.4); }
+
+  .qa-q {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--surface);
+    transition: background 0.15s;
+    user-select: none;
+  }
+
+  .qa-q:hover { background: var(--surface2); }
+
+  .qa-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(91,138,245,0.12);
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .qa-text { font-size: 14px; color: var(--text-bright); font-weight: 400; flex: 1; }
+
+  .qa-chevron {
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .qa-item.open .qa-chevron { transform: rotate(180deg); }
+
+  .qa-a {
+    display: none;
+    padding: 16px 20px 20px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+  }
+
+  .qa-item.open .qa-a { display: block; }
+
+  /* ── File anatomy ── */
+  .file-explain {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .file-explain-header {
+    background: var(--surface2);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .file-explain-header .fname {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    font-weight: 500;
+  }
+
+  .annotated-line {
+    display: grid;
+    grid-template-columns: 1fr;
+    border-bottom: 1px solid rgba(42,45,58,0.5);
+  }
+
+  .annotated-line:last-child { border-bottom: none; }
+
+  .line-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    padding: 8px 20px;
+    background: var(--code-bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .line-explain {
+    font-size: 12.5px;
+    padding: 8px 20px 12px;
+    color: var(--text-dim);
+    background: rgba(22,24,32,0.6);
+    border-top: 1px dashed var(--border);
+    line-height: 1.55;
+  }
+
+  .line-explain strong { color: var(--accent3); font-weight: 500; }
+  .line-explain .alt { color: var(--accent2); }
+
+  /* ── Pipeline flow ── */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 32px;
+    bottom: 32px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent3));
+    opacity: 0.4;
+  }
+
+  .pipeline-step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 16px 0;
+    position: relative;
+  }
+
+  .pipeline-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .pipeline-content { flex: 1; padding-top: 8px; }
+
+  .pipeline-title { font-weight: 500; color: var(--text-bright); font-size: 14px; margin-bottom: 4px; }
+  .pipeline-desc { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .pipeline-code { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent3); background: rgba(78,203,141,0.1); padding: 2px 8px; border-radius: 4px; margin-top: 6px; display: inline-block; }
+
+  /* ── Comparison table ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: var(--surface2); color: var(--text-bright); font-weight: 500; padding: 10px 14px; text-align: left; border: 1px solid var(--border); }
+  td { padding: 10px 14px; border: 1px solid var(--border); color: var(--text); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── Progress bar ── */
+  .progress-bar {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 6px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(to right, var(--accent), var(--accent3)); }
+
+  /* ── Glossary ── */
+  .glossary-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .glossary-term { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--accent2); font-weight: 500; }
+  .glossary-def { font-size: 13.5px; color: var(--text); line-height: 1.6; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     SIDEBAR NAVIGATION
+     ══════════════════════════════════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="title">GenAI Chatbot<br>Study Guide</div>
+    <div class="subtitle">Phase 1 — Complete Reference</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Start Here</div>
+    <a class="nav-item active" onclick="show('overview')">
+      <span class="dot" style="background:#5b8af5"></span> Overview & Goals
+    </a>
+    <a class="nav-item" onclick="show('architecture')">
+      <span class="dot" style="background:#4ecb8d"></span> Architecture Diagram
+    </a>
+    <a class="nav-item" onclick="show('pipeline')">
+      <span class="dot" style="background:#f5a623"></span> How a Message Flows
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Backend Files</div>
+    <a class="nav-item" onclick="show('main-py')">
+      <span class="dot" style="background:#7ab3f5"></span> main.py
+    </a>
+    <a class="nav-item" onclick="show('config-py')">
+      <span class="dot" style="background:#7ab3f5"></span> config.py
+    </a>
+    <a class="nav-item" onclick="show('schemas-py')">
+      <span class="dot" style="background:#7ab3f5"></span> schemas/chat.py
+    </a>
+    <a class="nav-item" onclick="show('ai-service-py')">
+      <span class="dot" style="background:#7ab3f5"></span> ai_service.py ★
+    </a>
+    <a class="nav-item" onclick="show('api-chat-py')">
+      <span class="dot" style="background:#7ab3f5"></span> api/chat.py ★
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Frontend Files</div>
+    <a class="nav-item" onclick="show('store-js')">
+      <span class="dot" style="background:#5dd6f5"></span> chatStore.js ★
+    </a>
+    <a class="nav-item" onclick="show('api-chat-js')">
+      <span class="dot" style="background:#5dd6f5"></span> api/chat.js ★
+    </a>
+    <a class="nav-item" onclick="show('use-chat-js')">
+      <span class="dot" style="background:#5dd6f5"></span> useChat.js
+    </a>
+    <a class="nav-item" onclick="show('chat-window')">
+      <span class="dot" style="background:#5dd6f5"></span> ChatWindow.jsx
+    </a>
+    <a class="nav-item" onclick="show('app-jsx')">
+      <span class="dot" style="background:#5dd6f5"></span> App.jsx & main.jsx
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Deep Learning</div>
+    <a class="nav-item" onclick="show('concepts')">
+      <span class="dot" style="background:#b89cf5"></span> Key Concepts
+    </a>
+    <a class="nav-item" onclick="show('qa')">
+      <span class="dot" style="background:#e8809e"></span> Q &amp; A (30 Questions)
+    </a>
+    <a class="nav-item" onclick="show('glossary')">
+      <span class="dot" style="background:#4ecb8d"></span> Glossary
+    </a>
+    <a class="nav-item" onclick="show('phase2-preview')">
+      <span class="dot" style="background:#f5a623"></span> Phase 2 Preview
+    </a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN CONTENT
+     ══════════════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     OVERVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section active" id="sec-overview">
+  <h1>GenAI Chatbot<br><em>Study Guide</em></h1>
+  <p class="lead">A complete beginner's reference for every file, concept, and decision in Phase 1 of the chatbot project.</p>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">🎯 How to use this guide</div>
+    Use the left sidebar to jump to any file or topic. Each section explains what the code does, why it's written that way, and what alternatives exist. The ★ files are the most important ones to understand deeply.
+  </div>
+
+  <h2>What are we building?</h2>
+  <p>A real-time AI chatbot where:</p>
+  <ul style="padding-left: 20px; margin-bottom: 16px; line-height: 2;">
+    <li>The user types a message in a <strong style="color:var(--text-bright)">React</strong> browser app</li>
+    <li>The message is sent to a <strong style="color:var(--text-bright)">Python FastAPI</strong> server</li>
+    <li>FastAPI calls the <strong style="color:var(--text-bright)">Groq AI API</strong> (free, fast LLM)</li>
+    <li>The AI response <strong style="color:var(--text-bright)">streams back word-by-word</strong> — just like ChatGPT</li>
+    <li>React shows each word as it arrives in real time</li>
+  </ul>
+
+  <h2>Technologies at a glance</h2>
+  <table>
+    <tr><th>Technology</th><th>What it is</th><th>Why we use it</th><th>Alternative</th></tr>
+    <tr>
+      <td><span class="tag tag-react">React</span> + Vite</td>
+      <td>JavaScript UI library + fast build tool</td>
+      <td>Build interactive UIs with components</td>
+      <td>Vue.js, Svelte, plain HTML</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-py">FastAPI</span></td>
+      <td>Modern Python web framework</td>
+      <td>Fast, async, auto-generates API docs</td>
+      <td>Flask (older), Django (heavier)</td>
+    </tr>
+    <tr>
+      <td><span class="tag tag-groq">Groq SDK</span></td>
+      <td>Python library to call Groq's AI models</td>
+      <td>Free tier, very fast responses</td>
+      <td>Anthropic SDK, OpenAI SDK</td>
+    </tr>
+    <tr>
+      <td>Zustand</td>
+      <td>React state management library</td>
+      <td>Simpler than Redux, no boilerplate</td>
+      <td>Redux, Context API, Jotai</td>
+    </tr>
+    <tr>
+      <td>SSE (Server-Sent Events)</td>
+      <td>A way to stream data from server to browser</td>
+      <td>Perfect for AI token streaming, simpler than WebSockets</td>
+      <td>WebSockets, long polling</td>
+    </tr>
+    <tr>
+      <td>Pydantic</td>
+      <td>Python data validation library</td>
+      <td>Validates API request/response shapes automatically</td>
+      <td>Marshmallow, dataclasses</td>
+    </tr>
+  </table>
+
+  <h2>Learning goals for Phase 1</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;">
+    <div class="callout callout-info" style="margin:0">
+      <div class="callout-title">Backend</div>
+      How FastAPI handles HTTP requests, how async/await works in Python, how streaming works with generators
+    </div>
+    <div class="callout callout-tip" style="margin:0">
+      <div class="callout-title">Frontend</div>
+      How React state works, how custom hooks clean up components, how to read a streaming HTTP response
+    </div>
+    <div class="callout callout-warn" style="margin:0">
+      <div class="callout-title">GenAI</div>
+      How to call an LLM API, what tokens are, how streaming differs from a regular API call
+    </div>
+    <div class="callout callout-alt" style="margin:0">
+      <div class="callout-title">Architecture</div>
+      Why we separate concerns into files, what SSE is, how the frontend and backend stay decoupled
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-architecture">
+  <h1>Architecture <em>Diagram</em></h1>
+  <p class="lead">How every layer connects — from the browser to the AI model and back.</p>
+
+  <div class="arch-diagram">
+    <div style="text-align:center; margin-bottom:24px; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em;">Full System Architecture</div>
+
+    <!-- Browser layer -->
+    <div class="arch-row">
+      <div class="arch-box blue" style="min-width:420px;">
+        🌐 Browser (User's Computer)
+        <small>http://localhost:5173</small>
+      </div>
+    </div>
+    <div class="arch-label">React app runs here — Vite serves it during development</div>
+
+    <!-- React components -->
+    <div class="arch-row" style="gap:8px;">
+      <div class="arch-box blue">App.jsx<small>root component</small></div>
+      <div class="arch-box blue">ChatWindow.jsx<small>UI + input</small></div>
+      <div class="arch-box blue">chatStore.js<small>Zustand state</small></div>
+    </div>
+    <div class="arch-label">↓ useChat() hook calls streamChat() in api/chat.js</div>
+
+    <!-- API call -->
+    <div class="arch-row">
+      <div class="arch-box teal">api/chat.js — fetch() POST<small>messages sent as JSON body</small></div>
+    </div>
+    <div class="arch-label">↓↑  HTTP over localhost — Vite proxy forwards /api → port 8000</div>
+
+    <!-- FastAPI layer -->
+    <div class="arch-row">
+      <div class="arch-box amber" style="min-width:420px;">
+        ⚡ FastAPI Server — Python
+        <small>http://localhost:8000  |  uvicorn app.main:app</small>
+      </div>
+    </div>
+
+    <div class="arch-row" style="gap:8px; margin-top:8px;">
+      <div class="arch-box amber">main.py<small>app + CORS setup</small></div>
+      <div class="arch-box amber">api/chat.py<small>route handlers</small></div>
+      <div class="arch-box amber">schemas/chat.py<small>request validation</small></div>
+    </div>
+    <div class="arch-label">↓ api/chat.py calls ai_service.py</div>
+
+    <!-- AI Service -->
+    <div class="arch-row">
+      <div class="arch-box purple">services/ai_service.py<small>Groq SDK — stream_chat_response()</small></div>
+    </div>
+    <div class="arch-label">↓↑  HTTPS to api.groq.com — tokens stream back</div>
+
+    <!-- Groq -->
+    <div class="arch-row">
+      <div class="arch-box pink">☁️ Groq Cloud API<small>llama-3.1-8b-instant model</small></div>
+    </div>
+
+    <!-- Return path -->
+    <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border);">
+      <div style="text-align:center; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:16px;">Return Path — Streaming Response</div>
+      <div class="arch-row" style="gap:4px; flex-wrap:wrap; justify-content:center;">
+        <div class="arch-box pink" style="min-width:100px; font-size:11px;">Groq sends<br>token chunk</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box purple" style="min-width:100px; font-size:11px;">ai_service<br>yields chunk</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box amber" style="min-width:110px; font-size:11px;">chat.py wraps<br>as SSE event</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box teal" style="min-width:110px; font-size:11px;">api/chat.js<br>reads chunk</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box blue" style="min-width:110px; font-size:11px;">Zustand<br>appends text</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-box blue" style="min-width:100px; font-size:11px;">React<br>re-renders</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Why this separation of layers?</h2>
+  <div class="callout callout-info">
+    <div class="callout-title">Separation of Concerns</div>
+    Each file does exactly one job. <code>api/chat.py</code> handles HTTP — it doesn't know about Groq. <code>ai_service.py</code> handles Groq — it doesn't know about HTTP. This means if you switch from Groq to OpenAI, you only change <code>ai_service.py</code>. Nothing else breaks.
+  </div>
+
+  <h2>What is CORS and why do we need it?</h2>
+  <p>Your browser runs React on port <strong style="color:var(--text-bright)">5173</strong>. FastAPI runs on port <strong style="color:var(--text-bright)">8000</strong>. Browsers block requests between different ports by default (a security feature called the Same-Origin Policy). CORS middleware in FastAPI tells the browser: "it's okay to accept requests from port 5173."</p>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠️ Common Beginner Mistake</div>
+    If you forget to add CORS middleware, your React app will get a "CORS error" in the browser console and the API call will fail silently. The backend is actually running fine — the browser just refuses to pass the response to JavaScript.
+  </div>
+
+  <h2>What is the Vite proxy?</h2>
+  <p>In <code>vite.config.js</code> we have:</p>
+  <div class="code-block">
+    <div class="code-header"><span class="filename">vite.config.js</span></div>
+    <pre><span class="fn">proxy</span>: {
+  <span class="str">'/api'</span>: {
+    <span class="fn">target</span>: <span class="str">'http://localhost:8000'</span>,
+    <span class="fn">changeOrigin</span>: <span class="kw">true</span>,
+  }
+}</pre>
+  </div>
+  <p>This means: when React calls <code>/api/chat/stream</code>, Vite quietly redirects it to <code>http://localhost:8000/api/chat/stream</code>. The React code never has a hardcoded port number. In production, you'd use a real domain name instead.</p>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PIPELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-pipeline">
+  <h1>How a <em>Message Flows</em></h1>
+  <p class="lead">Step by step — what happens from the moment you press Enter to seeing the AI response.</p>
+
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <div class="pipeline-num">1</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">User presses Enter in ChatWindow.jsx</div>
+        <div class="pipeline-desc">The <code>handleSend()</code> function runs. It reads the textarea value, then calls <code>sendMessage(text)</code> from the <code>useChat</code> hook. The textarea is cleared immediately so the user sees feedback right away.</div>
+        <div class="pipeline-code">handleSend() → sendMessage(text)</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">2</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">useChat hook adds user message to Zustand store</div>
+        <div class="pipeline-desc"><code>addMessage('user', text)</code> is called. Zustand updates its state object. React automatically re-renders ChatWindow. The user's message bubble appears instantly — before any AI response arrives.</div>
+        <div class="pipeline-code">store.messages = [...messages, { role: 'user', content: text }]</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">3</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">An empty assistant bubble is created</div>
+        <div class="pipeline-desc"><code>startAssistantMessage()</code> adds an empty <code>{ role: 'assistant', content: '' }</code> to the store. <code>isLoading</code> is set to true. React renders an empty assistant bubble — this is the bubble that will get filled in as tokens arrive.</div>
+        <div class="pipeline-code">store.messages = [..., { role: 'assistant', content: '' }]</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">4</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">fetch() POST request sent to FastAPI</div>
+        <div class="pipeline-desc"><code>streamChat()</code> in <code>api/chat.js</code> calls <code>fetch('/api/chat/stream')</code> with the full conversation history as JSON. This is a regular HTTP POST — but we're going to read the <em>response body as a stream</em> instead of waiting for it to finish.</div>
+        <div class="pipeline-code">fetch('/api/chat/stream', { method: 'POST', body: JSON.stringify({ messages }) })</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">5</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">FastAPI validates the request with Pydantic</div>
+        <div class="pipeline-desc">FastAPI automatically checks that the request body matches the <code>ChatRequest</code> schema (has a <code>messages</code> array, each with <code>role</code> and <code>content</code> strings). If anything is wrong, it returns a 422 error automatically. No manual validation code needed.</div>
+        <div class="pipeline-code">ChatRequest.messages: List[Message] ← auto-validated</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">6</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">ai_service.py calls Groq with streaming enabled</div>
+        <div class="pipeline-desc"><code>stream_chat_response()</code> calls <code>client.chat.completions.create(..., stream=True)</code>. Groq starts generating the response. Instead of waiting for the full response, it sends tokens one at a time as they're generated.</div>
+        <div class="pipeline-code">client.chat.completions.create(model=..., stream=True)</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">7</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Each token is wrapped as an SSE event and sent</div>
+        <div class="pipeline-desc">For every text chunk Groq yields, <code>api/chat.py</code> wraps it as <code>data: hello\n\n</code> and sends it immediately via <code>StreamingResponse</code>. The HTTP connection stays open — it's like a one-way pipe from server to browser.</div>
+        <div class="pipeline-code">yield f"data: {chunk}\n\n"  ← SSE format</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">8</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">React reads each SSE chunk from the stream</div>
+        <div class="pipeline-desc"><code>api/chat.js</code> uses <code>response.body.getReader()</code> to read the stream chunk by chunk. For each chunk it receives, it strips the <code>data: </code> prefix and calls <code>onChunk(text)</code>.</div>
+        <div class="pipeline-code">const { done, value } = await reader.read()</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">9</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Zustand appends the chunk to the assistant bubble</div>
+        <div class="pipeline-desc"><code>appendToLastMessage(chunk)</code> finds the last message in the array (the empty assistant one) and appends the new text to its <code>content</code>. React sees the state changed and re-renders just that bubble — the new word appears.</div>
+        <div class="pipeline-code">messages[last].content += chunk  → React re-renders</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">10</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Groq sends [DONE], streaming ends</div>
+        <div class="pipeline-desc">When Groq finishes generating, our backend sends <code>data: [DONE]\n\n</code>. React receives it, calls <code>onDone()</code>, which calls <code>finishStreaming()</code> in the store — setting <code>isLoading = false</code>. The input box re-enables.</div>
+        <div class="pipeline-code">data: [DONE] → isLoading = false → input re-enabled</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     MAIN.PY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-main-py">
+  <h1><em>main.py</em></h1>
+  <p class="lead">The FastAPI app entry point. This is where the server is created and configured.</p>
+  <span class="tag tag-py">Python</span> <span class="tag tag-concept">Entry Point</span>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">backend/app/main.py</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI</div>
+      <div class="line-explain"><strong>Import the FastAPI class.</strong> FastAPI is the framework — like a toolbox. We import just what we need. <span class="alt">Alternative: Flask uses <code>from flask import Flask</code> — very similar pattern.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> fastapi.middleware.cors <span class="kw">import</span> CORSMiddleware</div>
+      <div class="line-explain"><strong>Import CORS middleware.</strong> CORS = Cross-Origin Resource Sharing. Without this, the browser blocks our React app from talking to FastAPI because they run on different ports. Middleware is code that runs on every request before it reaches our route handlers.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> app.api <span class="kw">import</span> chat</div>
+      <div class="line-explain"><strong>Import our chat routes file.</strong> This works because we have <code>__init__.py</code> files that make the folders into Python packages. <code>app.api.chat</code> means: inside the <code>app</code> package, inside the <code>api</code> package, the <code>chat.py</code> module.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="cls">app</span> = FastAPI(<span class="fn">title</span>=<span class="str">"GenAI Chatbot API"</span>, <span class="fn">version</span>=<span class="str">"1.0.0"</span>)</div>
+      <div class="line-explain"><strong>Create the FastAPI application instance.</strong> This is the main app object. <code>title</code> and <code>version</code> appear in the auto-generated docs at <code>/docs</code>. This is similar to how you'd do <code>app = Flask(__name__)</code> in Flask.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">app.add_middleware(
+    CORSMiddleware,
+    <span class="fn">allow_origins</span>=[<span class="str">"http://localhost:5173"</span>],
+    <span class="fn">allow_credentials</span>=<span class="kw">True</span>,
+    <span class="fn">allow_methods</span>=[<span class="str">"*"</span>],
+    <span class="fn">allow_headers</span>=[<span class="str">"*"</span>],
+)</div>
+      <div class="line-explain"><strong>Add CORS middleware to allow React to call the API.</strong> <code>allow_origins</code> lists which URLs are permitted — in production, change this to your real domain (e.g. <code>https://myapp.com</code>). <code>"*"</code> for methods/headers means allow everything. <span class="alt">Warning: Never use <code>allow_origins=["*"]</code> in production with <code>allow_credentials=True</code> — it's a security risk.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">app.include_router(<span class="fn">chat.router</span>, <span class="fn">prefix</span>=<span class="str">"/api"</span>, <span class="fn">tags</span>=[<span class="str">"chat"</span>])</div>
+      <div class="line-explain"><strong>Register the chat routes with a /api prefix.</strong> <code>chat.router</code> is an <code>APIRouter</code> object defined in <code>api/chat.py</code>. The <code>prefix="/api"</code> means all routes in chat.py automatically get <code>/api</code> prepended — so <code>/chat/stream</code> becomes <code>/api/chat/stream</code>. <code>tags</code> just organizes the auto-docs.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="dec">@app.get</span>(<span class="str">"/"</span>)
+<span class="kw">async def</span> <span class="fn">root</span>():
+    <span class="kw">return</span> {<span class="str">"message"</span>: <span class="str">"API is running ✅"</span>}</div>
+      <div class="line-explain"><strong>A simple health check route.</strong> The <code>@app.get("/")</code> decorator means: "when someone makes a GET request to <code>/</code>, run this function". Returns a JSON object automatically — FastAPI converts Python dicts to JSON. Useful to test if the server started correctly.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">💡 How to run this file</div>
+    <code>uvicorn app.main:app --reload --port 8000</code><br><br>
+    <strong>uvicorn</strong> = the ASGI server that actually runs the app (like the engine)<br>
+    <strong>app.main:app</strong> = find the <code>app</code> variable inside <code>app/main.py</code><br>
+    <strong>--reload</strong> = restart automatically when you save a file (dev only)<br>
+    <strong>--port 8000</strong> = listen on port 8000
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CONFIG.PY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-config-py">
+  <h1><em>config.py</em></h1>
+  <p class="lead">Reads environment variables from the .env file and exposes them as a typed settings object.</p>
+  <span class="tag tag-py">Python</span> <span class="tag tag-concept">Configuration</span>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠️ Why not just hardcode the API key?</div>
+    If you hardcode <code>api_key = "gsk-abc123..."</code> directly in your code and push to GitHub, your key is public and anyone can use it (racking up charges). Environment variables keep secrets out of your code.
+  </div>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">backend/app/core/config.py</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> pydantic_settings <span class="kw">import</span> BaseSettings</div>
+      <div class="line-explain"><strong>Import BaseSettings from pydantic-settings.</strong> This is a special Pydantic class that reads from environment variables. Note: in older Pydantic v1, this was <code>from pydantic import BaseSettings</code>. In Pydantic v2 (what we use), it moved to its own package <code>pydantic-settings</code>. <span class="alt">Alternative: use <code>os.environ.get('API_KEY')</code> — works but no type checking.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">class</span> <span class="cls">Settings</span>(BaseSettings):
+    <span class="fn">api_key</span>: str = <span class="str">"your-key-here"</span>
+    <span class="fn">ai_model</span>: str = <span class="str">"llama-3.1-8b-instant"</span>
+    <span class="fn">max_tokens</span>: int = <span class="num">1024</span></div>
+      <div class="line-explain"><strong>Define all settings with types and defaults.</strong> Pydantic reads the <code>.env</code> file and matches keys by name (case-insensitive). If <code>API_KEY=abc</code> is in your <code>.env</code>, it overwrites the default. The type annotation (<code>str</code>, <code>int</code>) means Pydantic will automatically convert and validate the type — if you put a word where an int is expected, it raises an error.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="kw">class</span> <span class="cls">Config</span>:
+        <span class="fn">env_file</span> = <span class="str">".env"</span></div>
+      <div class="line-explain"><strong>Tell Pydantic where to find the .env file.</strong> This inner Config class is a Pydantic convention. <span class="alt">Modern alternative: In Pydantic v2 you can use <code>model_config = SettingsConfigDict(env_file='.env')</code> — but the nested Config class still works.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="fn">settings</span> = Settings()</div>
+      <div class="line-explain"><strong>Create one shared settings instance.</strong> This runs once when Python imports the file. Every other file imports this <code>settings</code> object — they all share the same instance. This is called the Singleton pattern. <span class="alt">Alternative: pass settings as function arguments — but that's tedious across many files.</span></div>
+    </div>
+  </div>
+
+  <h2>The .env file</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="filename">backend/.env</span><span>Never commit this to Git!</span></div>
+    <pre><span class="cm"># Lines starting with # are comments</span>
+API_KEY=gsk_your_actual_groq_key_here
+AI_MODEL=llama-3.1-8b-instant
+MAX_TOKENS=1024</pre>
+  </div>
+  <p>Add <code>.env</code> to your <code>.gitignore</code> file so it never gets pushed to GitHub. The <code>.env.example</code> file (which IS committed) shows the format without real values.</p>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SCHEMAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-schemas-py">
+  <h1><em>schemas/chat.py</em></h1>
+  <p class="lead">Defines the shape (structure) of data going into and out of the API using Pydantic models.</p>
+  <span class="tag tag-py">Python</span> <span class="tag tag-concept">Data Validation</span>
+
+  <div class="callout callout-info">
+    <div class="callout-title">💡 What is a Schema?</div>
+    A schema is a blueprint for data. It says "a Message must have a role field (string) and a content field (string)." If the frontend sends data in the wrong shape, Pydantic automatically rejects it with a clear error message — before your code even runs.
+  </div>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">backend/app/schemas/chat.py</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+<span class="kw">from</span> typing <span class="kw">import</span> List</div>
+      <div class="line-explain"><strong>Import BaseModel and List.</strong> All Pydantic data models inherit from BaseModel. <code>List</code> from <code>typing</code> is how you say "a list of X" in Python. <span class="alt">Modern note: In Python 3.9+, you can write <code>list[Message]</code> directly instead of <code>List[Message]</code>. Either works in Python 3.9+.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">class</span> <span class="cls">Message</span>(BaseModel):
+    <span class="fn">role</span>: str       <span class="cm"># "user" or "assistant"</span>
+    <span class="fn">content</span>: str    <span class="cm"># the message text</span></div>
+      <div class="line-explain"><strong>A single chat message.</strong> Both <code>role</code> and <code>content</code> are required strings. If either is missing or not a string, Pydantic raises a validation error. The comments explain valid values — but Pydantic doesn't enforce comment rules. In Phase 3, you might add <code>from typing import Literal</code> and type it as <code>role: Literal['user', 'assistant']</code> to enforce it.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">class</span> <span class="cls">ChatRequest</span>(BaseModel):
+    <span class="fn">messages</span>: List[Message]
+    <span class="fn">system_prompt</span>: str = <span class="str">"You are a helpful AI assistant."</span></div>
+      <div class="line-explain"><strong>The request body shape for POST /api/chat/stream.</strong> <code>messages</code> is required (no default). <code>system_prompt</code> has a default value — so the frontend doesn't have to send it every time. FastAPI automatically reads this from the HTTP request body and validates it. You never write <code>request.json()</code> manually.</div>
+    </div>
+  </div>
+
+  <h2>What the JSON looks like</h2>
+  <p>This is what React sends in the HTTP request body:</p>
+  <div class="code-block">
+    <div class="code-header"><span class="filename">HTTP Request Body (JSON)</span></div>
+    <pre>{
+  <span class="str">"messages"</span>: [
+    { <span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span> },
+    { <span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"Hi! How can I help?"</span> },
+    { <span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"What is Python?"</span> }
+  ],
+  <span class="str">"system_prompt"</span>: <span class="str">"You are a helpful AI assistant."</span>
+}</pre>
+  </div>
+  <p>Notice the <strong style="color:var(--text-bright)">full conversation history</strong> is sent every time — not just the latest message. This is because LLMs are stateless: they have no memory between calls. Sending all previous messages gives the AI context.</p>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     AI SERVICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-ai-service-py">
+  <h1><em>ai_service.py</em> ★</h1>
+  <p class="lead">The heart of the backend. This is where Python talks to Groq's AI model and gets a streaming response.</p>
+  <span class="tag tag-py">Python</span> <span class="tag tag-groq">Groq</span> <span class="tag tag-concept">Streaming</span>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">backend/app/services/ai_service.py</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> groq <span class="kw">import</span> Groq</div>
+      <div class="line-explain"><strong>Import the Groq SDK client class.</strong> The <code>groq</code> Python package was installed via <code>pip install groq</code>. This one class gives us everything we need to talk to Groq's API. <span class="alt">If you were using Anthropic: <code>from anthropic import Anthropic</code>. If OpenAI: <code>from openai import OpenAI</code>. All three follow the same pattern.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">from</span> typing <span class="kw">import</span> AsyncGenerator, List</div>
+      <div class="line-explain"><strong>Import type hints for the function signature.</strong> <code>AsyncGenerator[str, None]</code> means "an async function that yields strings." This is just documentation — Python doesn't enforce it at runtime, but it helps you and your editor understand the code. <span class="alt">In Python 3.9+ you could import from <code>collections.abc</code> instead.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="fn">client</span> = Groq(<span class="fn">api_key</span>=settings.api_key)</div>
+      <div class="line-explain"><strong>Create the Groq client once, at module load time.</strong> This client object holds the connection configuration. Creating it once (not inside each function) is more efficient — you're not re-reading the API key every request. This is called a module-level singleton.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">async def</span> <span class="fn">stream_chat_response</span>(
+    <span class="fn">messages</span>: List[Message],
+    <span class="fn">system_prompt</span>: str = <span class="str">"..."</span>,
+) -> AsyncGenerator[str, None]:</div>
+      <div class="line-explain"><strong>Define an async generator function.</strong> <code>async</code> means this function can be paused while waiting for I/O (like a network call). The return type <code>AsyncGenerator[str, None]</code> means it yields strings. <strong>A function that uses <code>yield</code> is called a generator</strong> — it produces values one at a time instead of returning them all at once.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="fn">groq_messages</span> = [
+        {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: system_prompt},
+        *[{<span class="str">"role"</span>: msg.role, <span class="str">"content"</span>: msg.content}
+          <span class="kw">for</span> msg <span class="kw">in</span> messages]
+    ]</div>
+      <div class="line-explain"><strong>Convert our Message objects to Groq's expected format.</strong> Groq (and most LLM APIs) want the system prompt as a special first message with <code>role: "system"</code>. The <code>*[...]</code> syntax spreads the list comprehension into the outer list. A list comprehension (<code>[... for x in y]</code>) is a compact way to transform a list — equivalent to a for loop that builds a new list.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="fn">stream</span> = client.chat.completions.create(
+        <span class="fn">model</span>=settings.ai_model,
+        <span class="fn">messages</span>=groq_messages,
+        <span class="fn">max_tokens</span>=settings.max_tokens,
+        <span class="fn">stream</span>=<span class="kw">True</span>,
+    )</div>
+      <div class="line-explain"><strong>Call Groq's API with streaming enabled.</strong> <code>stream=True</code> is the key — without it, this would wait for the full response before returning anything. With it, Groq starts sending tokens immediately as they're generated. The <code>stream</code> variable is an iterable that yields chunks.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="kw">for</span> chunk <span class="kw">in</span> stream:
+        text = chunk.choices[<span class="num">0</span>].delta.content
+        <span class="kw">if</span> text:
+            <span class="kw">yield</span> text</div>
+      <div class="line-explain"><strong>The streaming loop — the most important part.</strong> <code>for chunk in stream</code> iterates over each piece as it arrives from Groq. <code>chunk.choices[0].delta.content</code> is the path to the text inside Groq's response object (<code>choices</code> is an array because you could request multiple responses; <code>delta</code> is the new portion of text; <code>content</code> is the string). The final chunk often has <code>content = None</code>, so we guard with <code>if text</code>. <code>yield</code> is what makes this a generator — it pauses the function and hands the value to the caller, then resumes from this exact line next time.</div>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">🔑 Key Concept: yield vs return</div>
+    <strong>return</strong> exits the function and gives one value back.<br><br>
+    <strong>yield</strong> pauses the function, gives one value back, then resumes from the same spot when the caller asks for the next value. This is how Python generators work — perfect for streaming because you process one chunk at a time without loading everything into memory.
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     API/CHAT.PY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-api-chat-py">
+  <h1><em>api/chat.py</em> ★</h1>
+  <p class="lead">The FastAPI route handlers. Receives HTTP requests, calls the AI service, and streams back SSE events.</p>
+  <span class="tag tag-py">Python</span> <span class="tag tag-concept">SSE</span> <span class="tag tag-concept">HTTP Routes</span>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">backend/app/api/chat.py</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="fn">router</span> = APIRouter()</div>
+      <div class="line-explain"><strong>Create an APIRouter instance.</strong> A router is like a mini app — it groups related routes together. We import this <code>router</code> into <code>main.py</code> and register it with a prefix. This keeps <code>main.py</code> clean and makes routes easy to find. <span class="alt">Alternative: define routes directly on <code>app</code> in main.py — works but gets messy as the app grows.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="dec">@router.post</span>(<span class="str">"/chat/stream"</span>)
+<span class="kw">async def</span> <span class="fn">chat_stream</span>(request: ChatRequest):</div>
+      <div class="line-explain"><strong>Define the streaming endpoint.</strong> <code>@router.post</code> means this handles POST requests. The full URL is <code>/api/chat/stream</code> (because main.py adds <code>/api</code> prefix). FastAPI sees the <code>request: ChatRequest</code> parameter and automatically reads + validates the JSON body. No manual <code>request.json()</code> needed.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="kw">async def</span> <span class="fn">generate</span>():
+        <span class="kw">try</span>:
+            <span class="kw">async for</span> chunk <span class="kw">in</span> stream_chat_response(...):
+                escaped = chunk.replace(<span class="str">"\n"</span>, <span class="str">"\\n"</span>)
+                <span class="kw">yield</span> <span class="str">f"data: {escaped}\n\n"</span>
+            <span class="kw">yield</span> <span class="str">"data: [DONE]\n\n"</span>
+        <span class="kw">except</span> Exception <span class="kw">as</span> e:
+            <span class="kw">yield</span> <span class="str">f"data: [ERROR] {str(e)}\n\n"</span></div>
+      <div class="line-explain"><strong>Inner generator function that wraps chunks as SSE events.</strong> SSE format requires each message to be <code>data: content\n\n</code> (double newline to end the event). We escape newlines in the content (<code>\n</code> → <code>\\n</code>) so they don't break the SSE format. The try/except sends errors as SSE events so React can display them. <code>async for</code> is used because <code>stream_chat_response</code> is an async generator.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="kw">return</span> StreamingResponse(
+        <span class="fn">generate</span>(),
+        <span class="fn">media_type</span>=<span class="str">"text/event-stream"</span>,
+        <span class="fn">headers</span>={<span class="str">"Cache-Control"</span>: <span class="str">"no-cache"</span>}
+    )</div>
+      <div class="line-explain"><strong>Return a StreamingResponse.</strong> Unlike a normal response that sends everything at once, StreamingResponse keeps the HTTP connection open and sends data as the generator yields it. <code>media_type="text/event-stream"</code> is the official MIME type for SSE — this tells the browser it's receiving a stream of events. <code>Cache-Control: no-cache</code> prevents any proxy or browser from buffering the stream.</div>
+    </div>
+  </div>
+
+  <h2>What is SSE (Server-Sent Events)?</h2>
+  <div class="callout callout-info">
+    <div class="callout-title">💡 SSE vs WebSockets</div>
+    <table style="margin-top:8px;">
+      <tr><th></th><th>SSE</th><th>WebSockets</th></tr>
+      <tr><td>Direction</td><td>Server → Client only</td><td>Both directions</td></tr>
+      <tr><td>Protocol</td><td>Regular HTTP</td><td>Special WS protocol</td></tr>
+      <tr><td>Complexity</td><td>Simple</td><td>More complex</td></tr>
+      <tr><td>Reconnection</td><td>Automatic</td><td>Manual</td></tr>
+      <tr><td>Best for</td><td>AI streaming, notifications</td><td>Chat, games, live collaboration</td></tr>
+    </table>
+    <br>For AI streaming, SSE is the right choice — we only need server → browser communication.
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CHAT STORE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-store-js">
+  <h1><em>chatStore.js</em> ★</h1>
+  <p class="lead">The global state container for the entire conversation. Built with Zustand.</p>
+  <span class="tag tag-react">React</span> <span class="tag tag-concept">State Management</span>
+
+  <div class="callout callout-info">
+    <div class="callout-title">💡 What is state?</div>
+    State is data that can change over time and whose changes should update the UI. Examples: the list of messages, whether the AI is loading, any error message. When state changes, React automatically re-renders the affected components.
+  </div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">💡 Why Zustand instead of useState?</div>
+    <code>useState</code> is local to one component. If ChatWindow and a Header both need to know if the AI is loading, you'd have to "lift state up" through parent components — messy with prop drilling. Zustand creates a global store any component can access directly.
+    <br><br><span class="alt">Alternatives: Redux (very powerful but complex), Context API (built into React but causes performance issues with frequent updates), Jotai (similar to Zustand but atom-based).</span>
+  </div>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">frontend/src/store/chatStore.js</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">import</span> { create } <span class="kw">from</span> <span class="str">'zustand'</span></div>
+      <div class="line-explain"><strong>Import the create function from Zustand.</strong> <code>create</code> is the only thing you need from Zustand. You pass it a function that returns your state and actions.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">const</span> <span class="fn">useChatStore</span> = <span class="fn">create</span>((<span class="fn">set</span>, <span class="fn">get</span>) => ({
+  messages: [],
+  isLoading: <span class="kw">false</span>,
+  error: <span class="kw">null</span>,</div>
+      <div class="line-explain"><strong>Create the store with initial state.</strong> <code>set</code> is a function to update state — you call <code>set({ key: value })</code>. <code>get</code> reads current state without causing a re-render — useful inside action functions. The initial values (<code>[]</code>, <code>false</code>, <code>null</code>) are what the store starts with.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">  <span class="fn">addMessage</span>: (<span class="fn">role</span>, <span class="fn">content</span>) => {
+    <span class="fn">set</span>((<span class="fn">state</span>) => ({
+      messages: [...state.messages, { role, content }],
+    }))
+  },</div>
+      <div class="line-explain"><strong>An action that adds a message.</strong> We pass a function to <code>set</code> (instead of an object) when the new state depends on the previous state. <code>state</code> is the current state. <code>[...state.messages, newMsg]</code> uses the spread operator to create a NEW array with the new message added — we never mutate the existing array directly. <span class="alt">Why not push? React needs new object references to detect changes. Mutating the array directly won't trigger re-renders.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">  <span class="fn">appendToLastMessage</span>: (<span class="fn">chunk</span>) => {
+    <span class="fn">set</span>((<span class="fn">state</span>) => {
+      <span class="kw">const</span> messages = [...state.messages]
+      <span class="kw">const</span> last = messages[messages.length - <span class="num">1</span>]
+      messages[messages.length - <span class="num">1</span>] = {
+        ...last, content: last.content + text
+      }
+      <span class="kw">return</span> { messages }
+    })
+  },</div>
+      <div class="line-explain"><strong>The streaming action — called on every SSE token.</strong> We copy the messages array (<code>[...state.messages]</code>), then copy the last message object (<code>...last</code>) but with updated content. This creates new references at every level — required for React to detect the change. This function runs dozens or hundreds of times per response as tokens stream in.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     API/CHAT.JS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-api-chat-js">
+  <h1><em>api/chat.js</em> ★</h1>
+  <p class="lead">Handles the streaming fetch request from the browser to FastAPI. Reads SSE chunks in real time.</p>
+  <span class="tag tag-react">JavaScript</span> <span class="tag tag-concept">SSE</span> <span class="tag tag-concept">Fetch API</span>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">frontend/src/api/chat.js</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`/api/chat/stream`</span>, {
+  <span class="fn">method</span>: <span class="str">'POST'</span>,
+  <span class="fn">headers</span>: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+  <span class="fn">body</span>: JSON.<span class="fn">stringify</span>({ messages, system_prompt }),
+})</div>
+      <div class="line-explain"><strong>Make a POST request with fetch.</strong> <code>await</code> pauses execution until the response headers arrive (not the body). <code>Content-Type: application/json</code> tells FastAPI the body is JSON. <code>JSON.stringify</code> converts the JavaScript object to a JSON string. <span class="alt">Why not Axios? Axios doesn't support reading streaming responses as a ReadableStream. We use native fetch for this specific use case.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">const</span> reader = response.body.<span class="fn">getReader</span>()
+<span class="kw">const</span> decoder = <span class="kw">new</span> TextDecoder()</div>
+      <div class="line-explain"><strong>Get a reader for the response body stream.</strong> <code>response.body</code> is a ReadableStream — it arrives byte by byte. <code>getReader()</code> gives us a controller to read it chunk by chunk. <code>TextDecoder</code> converts raw bytes (Uint8Array) into a JavaScript string — because HTTP data is bytes, not text. <span class="alt">Alternative: Use the <code>EventSource</code> browser API — but it only supports GET requests. Our POST with JSON body requires fetch instead.</span></div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">while</span> (<span class="kw">true</span>) {
+  <span class="kw">const</span> { done, value } = <span class="kw">await</span> reader.<span class="fn">read</span>()
+  <span class="kw">if</span> (done) <span class="kw">break</span>
+  <span class="kw">const</span> text = decoder.<span class="fn">decode</span>(value, { stream: <span class="kw">true</span> })</div>
+      <div class="line-explain"><strong>Read chunks in an infinite loop until done.</strong> <code>reader.read()</code> returns a Promise that resolves with <code>{ done, value }</code>. When the server closes the connection, <code>done</code> becomes true and we break. <code>{ stream: true }</code> in decode tells the TextDecoder that more bytes may come — important for multi-byte characters (emoji, accented letters) that might arrive split across chunks.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">  <span class="kw">const</span> lines = text.<span class="fn">split</span>(<span class="str">'\n\n'</span>)
+  <span class="kw">for</span> (<span class="kw">const</span> line <span class="kw">of</span> lines) {
+    <span class="kw">if</span> (!line.<span class="fn">startsWith</span>(<span class="str">'data: '</span>)) <span class="kw">continue</span>
+    <span class="kw">const</span> data = line.<span class="fn">replace</span>(<span class="str">'data: '</span>, <span class="str">''</span>).<span class="fn">trim</span>()</div>
+      <div class="line-explain"><strong>Parse the SSE format.</strong> SSE events are separated by double newlines. We split on <code>\n\n</code> to get individual events, then check each starts with <code>data: </code>. The <code>continue</code> keyword skips to the next loop iteration. We strip the <code>data: </code> prefix to get the actual content. Multiple events can arrive in one network chunk — that's why we loop through lines.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">    <span class="kw">if</span> (data === <span class="str">'[DONE]'</span>) { <span class="fn">onDone</span>(); <span class="kw">return</span> }
+    <span class="kw">if</span> (data.<span class="fn">startsWith</span>(<span class="str">'[ERROR]'</span>)) { <span class="fn">onError</span>(...); <span class="kw">return</span> }
+    <span class="kw">if</span> (data) { <span class="fn">onChunk</span>(data) }</div>
+      <div class="line-explain"><strong>Handle the three possible SSE messages.</strong> <code>[DONE]</code> = streaming complete, call onDone(). <code>[ERROR]</code> = something went wrong, call onError(). Any other non-empty data = a text token, call onChunk(). These callback functions (<code>onChunk</code>, <code>onDone</code>, <code>onError</code>) are passed in from the useChat hook — this keeps api/chat.js decoupled from Zustand.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     USECHAT.JS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-use-chat-js">
+  <h1><em>useChat.js</em></h1>
+  <p class="lead">A custom React hook that connects the Zustand store and the API layer into one clean interface for components.</p>
+  <span class="tag tag-react">React</span> <span class="tag tag-concept">Custom Hook</span>
+
+  <div class="callout callout-info">
+    <div class="callout-title">💡 What is a Custom Hook?</div>
+    A custom hook is a JavaScript function that starts with <code>use</code> and can call other hooks. It lets you extract complex logic out of components into reusable functions. Components stay simple — they just call <code>useChat()</code> and get everything they need.
+  </div>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">frontend/src/hooks/useChat.js</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">const</span> <span class="fn">sendMessage</span> = <span class="fn">useCallback</span>(<span class="kw">async</span> (<span class="fn">userText</span>) => {
+  <span class="kw">if</span> (!userText.<span class="fn">trim</span>() || isLoading) <span class="kw">return</span></div>
+      <div class="line-explain"><strong>useCallback memoizes the function so it's not recreated on every render.</strong> Without useCallback, <code>sendMessage</code> would be a new function reference every render, causing infinite re-renders if passed to child components. The guard <code>!userText.trim() || isLoading</code> prevents sending empty messages or sending while already loading.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">  <span class="fn">addMessage</span>(<span class="str">'user'</span>, userText)
+  <span class="fn">startAssistantMessage</span>()
+  <span class="kw">const</span> currentMessages = <span class="fn">getMessages</span>()</div>
+      <div class="line-explain"><strong>Why call getMessages() after updating state?</strong> React state updates are asynchronous — <code>messages</code> from <code>useChatStore</code> won't include the new user message yet in this same synchronous block. <code>getMessages()</code> calls Zustand's <code>get()</code> internally, which reads the store synchronously after the update. This ensures we send the complete history including the just-added message.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">  <span class="kw">await</span> <span class="fn">streamChat</span>({
+    messages: currentMessages,
+    <span class="fn">onChunk</span>: appendToLastMessage,
+    <span class="fn">onDone</span>: finishStreaming,
+    <span class="fn">onError</span>: setError,
+  })</div>
+      <div class="line-explain"><strong>Pass store actions as callbacks to streamChat.</strong> <code>streamChat</code> doesn't know about Zustand — it just calls whatever functions you give it. This is dependency injection: the API function is independent, and the hook wires it up to the store. If you wanted to log every chunk to the console instead, you'd just change <code>onChunk</code>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     CHATWINDOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-chat-window">
+  <h1><em>ChatWindow.jsx</em></h1>
+  <p class="lead">The main UI component. Renders the message list, handles input, and auto-scrolls during streaming.</p>
+  <span class="tag tag-react">React</span> <span class="tag tag-concept">Component</span>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">frontend/src/components/ChatWindow.jsx</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">import</span> { useState, useRef, useEffect } <span class="kw">from</span> <span class="str">'react'</span></div>
+      <div class="line-explain"><strong>Three React hooks used here.</strong> <code>useState</code> — manages the input text (local to this component). <code>useRef</code> — gets a reference to a DOM element (the invisible div at the bottom) for scrolling. <code>useEffect</code> — runs code after render (to trigger auto-scroll when messages change).</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">const</span> messagesEndRef = <span class="fn">useRef</span>(<span class="kw">null</span>)</div>
+      <div class="line-explain"><strong>A ref points to a real DOM element.</strong> We put this on an invisible div at the bottom of the message list. When we call <code>messagesEndRef.current?.scrollIntoView()</code>, the browser scrolls to that element. Unlike state, changing a ref doesn't cause a re-render.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="fn">useEffect</span>(() => {
+  messagesEndRef.current?.<span class="fn">scrollIntoView</span>({ behavior: <span class="str">'smooth'</span> })
+}, [messages])</div>
+      <div class="line-explain"><strong>Auto-scroll on every message change.</strong> useEffect runs after every render where <code>messages</code> changed (the dependency array <code>[messages]</code>). During streaming, <code>messages</code> changes dozens of times per second (each token) — so this scrolls continuously as the AI types. <code>?.scrollIntoView</code> is optional chaining — safe if the ref isn't mounted yet.</div>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="kw">const</span> <span class="fn">handleKeyDown</span> = (<span class="fn">e</span>) => {
+  <span class="kw">if</span> (e.key === <span class="str">'Enter'</span> && !e.shiftKey) {
+    e.<span class="fn">preventDefault</span>()
+    <span class="fn">handleSend</span>()
+  }
+}</div>
+      <div class="line-explain"><strong>Enter sends, Shift+Enter adds a new line.</strong> <code>e.preventDefault()</code> stops the default browser behavior (which would add a newline). We check <code>!e.shiftKey</code> so that Shift+Enter still works for multi-line input. This is the standard chat input behavior users expect.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     APP.JSX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-app-jsx">
+  <h1><em>App.jsx</em> & <em>main.jsx</em></h1>
+  <p class="lead">The React entry points. main.jsx mounts React into the HTML page. App.jsx is the root component.</p>
+  <span class="tag tag-react">React</span> <span class="tag tag-concept">Entry Point</span>
+
+  <div class="file-explain">
+    <div class="file-explain-header">
+      <span class="fname">frontend/src/main.jsx</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code"><span class="fn">createRoot</span>(document.<span class="fn">getElementById</span>(<span class="str">'root'</span>))
+  .<span class="fn">render</span>(&lt;StrictMode&gt;&lt;App /&gt;&lt;/StrictMode&gt;)</div>
+      <div class="line-explain"><strong>Mount React into the HTML page.</strong> <code>getElementById('root')</code> finds the <code>&lt;div id="root"&gt;</code> in index.html. <code>createRoot</code> is the React 18 API (older React used <code>ReactDOM.render</code> — now deprecated). <code>StrictMode</code> adds helpful warnings in development — it intentionally runs effects twice to catch bugs. <span class="alt">Note: In React 18, StrictMode double-invocations don't affect production builds.</span></div>
+    </div>
+  </div>
+
+  <div class="file-explain" style="margin-top:16px">
+    <div class="file-explain-header">
+      <span class="fname">frontend/index.html</span>
+    </div>
+
+    <div class="annotated-line">
+      <div class="line-code">&lt;div <span class="fn">id</span>=<span class="str">"root"</span>&gt;&lt;/div&gt;
+&lt;script <span class="fn">type</span>=<span class="str">"module"</span> <span class="fn">src</span>=<span class="str">"/src/main.jsx"</span>&gt;&lt;/script&gt;</div>
+      <div class="line-explain"><strong>The entire React app lives inside this one div.</strong> The div starts empty — React fills it in. <code>type="module"</code> enables ES modules (import/export syntax) in the browser. Vite processes this file and injects the correct script tags automatically.</div>
+    </div>
+  </div>
+
+  <h2>How React renders</h2>
+  <p>React builds a virtual DOM (a JavaScript object tree representing the UI). When state changes, React compares the new virtual DOM to the old one, finds the differences, and updates only those specific DOM elements. This is called reconciliation — it's why React is fast even with frequent updates like streaming tokens.</p>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     KEY CONCEPTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-concepts">
+  <h1>Key <em>Concepts</em></h1>
+  <p class="lead">The fundamental ideas you need to understand the whole project.</p>
+
+  <h2>Async / Await</h2>
+  <div class="callout callout-info">
+    <div class="callout-title">What it means</div>
+    JavaScript and Python are single-threaded — they can only do one thing at a time. <code>async/await</code> allows code to pause while waiting for slow operations (network calls, file reads) without blocking everything else. <code>await</code> pauses that function only — other code can run in the meantime.
+  </div>
+  <div class="code-block">
+    <div class="code-header"><span class="filename">Sync vs Async comparison</span></div>
+    <pre><span class="cm">// SYNC: blocks everything for 2 seconds</span>
+<span class="kw">const</span> data = slowNetworkCall()  <span class="cm">// freezes the browser tab!</span>
+
+<span class="cm">// ASYNC: pauses only this function</span>
+<span class="kw">const</span> data = <span class="kw">await</span> <span class="fn">slowNetworkCall</span>()  <span class="cm">// other code keeps running</span></pre>
+  </div>
+
+  <h2>Generators (Python yield)</h2>
+  <div class="callout callout-info">
+    <div class="callout-title">What it means</div>
+    A generator function uses <code>yield</code> instead of <code>return</code>. Each time you call <code>next()</code> on it, it runs until the next <code>yield</code>, gives you that value, then pauses. Perfect for streaming — process one token at a time without loading the whole response into memory.
+  </div>
+
+  <h2>Tokens (LLM concept)</h2>
+  <p>Large language models don't process whole words — they process <strong style="color:var(--text-bright)">tokens</strong>. A token is roughly 3-4 characters. "Hello world" is 2 tokens. "antidisestablishmentarianism" might be 6 tokens. Models are priced per token. <code>max_tokens=1024</code> limits how long the response can be.</p>
+
+  <h2>Immutability in React</h2>
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠️ Critical React Rule</div>
+    Never mutate state directly. Always create new objects/arrays.
+    <div class="code-block" style="margin-top:10px">
+      <pre><span class="cm">// ❌ WRONG — React won't detect this change</span>
+state.messages.<span class="fn">push</span>(newMessage)
+
+<span class="cm">// ✅ CORRECT — creates a new array</span>
+[...state.messages, newMessage]</pre>
+    </div>
+    React uses reference equality to detect changes. If you mutate an existing array, the reference is the same object — React thinks nothing changed.
+  </div>
+
+  <h2>The Python __init__.py file</h2>
+  <p>An empty file called <code>__init__.py</code> inside a folder tells Python: "treat this folder as a package." Without it, <code>from app.api import chat</code> would fail with a ModuleNotFoundError. In modern Python (3.3+) with "namespace packages," you can sometimes skip it — but explicit <code>__init__.py</code> files are still the clearest approach.</p>
+
+  <h2>Environment Variables & .env</h2>
+  <p>A <code>.env</code> file stores secrets (API keys, database passwords) outside your code. The <code>python-dotenv</code> package reads this file and loads the values as environment variables. Your code reads them via <code>os.environ</code> or Pydantic's BaseSettings. Never commit <code>.env</code> to Git — add it to <code>.gitignore</code>.</p>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     Q & A
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-qa">
+  <h1>Q &amp; A — <em>30 Questions</em></h1>
+  <p class="lead">Common questions a beginner would ask, answered clearly. Click each question to reveal the answer.</p>
+
+  <div id="qa-list"></div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     GLOSSARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-glossary">
+  <h1><em>Glossary</em></h1>
+  <p class="lead">Every technical term used in this project, explained simply.</p>
+  <div id="glossary-list"></div>
+</section>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PHASE 2 PREVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<section class="section" id="sec-phase2-preview">
+  <h1>Phase 2 <em>Preview</em></h1>
+  <p class="lead">What gets added in Phase 2, and how it builds on Phase 1's foundation.</p>
+
+  <h2>What Phase 2 adds</h2>
+  <table>
+    <tr><th>Feature</th><th>New File</th><th>What it does</th></tr>
+    <tr><td>Login Page</td><td>frontend/src/pages/Login.jsx</td><td>Form that calls /api/auth/login</td></tr>
+    <tr><td>JWT Auth</td><td>backend/app/api/auth.py</td><td>Returns a signed token on login</td></tr>
+    <tr><td>User Model</td><td>backend/app/models/user.py</td><td>Database table with role field</td></tr>
+    <tr><td>Auth Store</td><td>frontend/src/store/authStore.js</td><td>Stores JWT token in Zustand</td></tr>
+    <tr><td>Protected Route</td><td>frontend/src/guards/ProtectedRoute.jsx</td><td>Redirects to login if no token</td></tr>
+    <tr><td>Role Guard</td><td>frontend/src/guards/RoleGuard.jsx</td><td>Hides UI elements by role</td></tr>
+    <tr><td>DB Setup</td><td>backend/app/core/database.py</td><td>SQLAlchemy + SQLite connection</td></tr>
+  </table>
+
+  <h2>What stays the same</h2>
+  <div class="callout callout-tip">
+    <div class="callout-title">✅ Phase 1 code is untouched</div>
+    <code>ai_service.py</code>, <code>api/chat.py</code>, <code>chatStore.js</code>, <code>api/chat.js</code>, <code>ChatWindow.jsx</code> — all of these survive unchanged into Phase 2. You're adding new files, not rewriting old ones. This is the benefit of good separation of concerns.
+  </div>
+
+  <h2>How JWT auth works (preview)</h2>
+  <div class="pipeline" style="--count:4">
+    <div class="pipeline-step">
+      <div class="pipeline-num">1</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">User logs in with email + password</div>
+        <div class="pipeline-desc">React sends POST to <code>/api/auth/login</code>. FastAPI checks the password hash against the database.</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">2</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">FastAPI returns a JWT token</div>
+        <div class="pipeline-desc">A JWT (JSON Web Token) is a signed string containing the user's ID and role. It's signed with a secret key — can't be faked.</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">3</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">React stores the token in Zustand (authStore)</div>
+        <div class="pipeline-desc">Every subsequent API request includes the token in the <code>Authorization: Bearer token</code> header via an Axios interceptor.</div>
+      </div>
+    </div>
+    <div class="pipeline-step">
+      <div class="pipeline-num">4</div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">FastAPI validates the token on every protected route</div>
+        <div class="pipeline-desc">A <code>get_current_user</code> dependency reads the token, validates the signature, extracts the role, and rejects the request if anything is wrong.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════════════════
+// Q & A DATA
+// ══════════════════════════════════════════════════════
+const qaData = [
+  {
+    q: "Why do we send the full conversation history every request instead of just the latest message?",
+    a: "LLMs are completely stateless — they have zero memory between API calls. Each call to Groq is a fresh request with no knowledge of previous calls. By sending all previous messages, we give the model context so it can give coherent follow-up answers. This is why chatbots can say things like 'as I mentioned earlier...' — all that context is in the request. The downside: longer conversations use more tokens and cost more."
+  },
+  {
+    q: "What's the difference between async def and def in Python?",
+    a: "A regular <code>def</code> function runs synchronously — it blocks until it finishes. An <code>async def</code> function is a coroutine — it can pause at <code>await</code> points, letting other code run. FastAPI requires async functions for route handlers that do I/O (network calls, database queries) so the server can handle multiple requests concurrently. Without async, one slow AI response would block all other users."
+  },
+  {
+    q: "Why does Vite run on port 5173 and FastAPI on 8000? Can they share a port?",
+    a: "Two processes cannot share the same port on the same machine — that's a networking rule. Vite serves static React files (HTML, CSS, JS). FastAPI serves API data. They're different jobs that need to run simultaneously during development. In production, you'd typically build the React app (<code>npm run build</code>) and serve the static files from FastAPI or a CDN, so both end up behind one domain."
+  },
+  {
+    q: "What is a Python generator and why do we use yield instead of return?",
+    a: "<code>return</code> gives back one value and exits the function. <code>yield</code> gives back one value and pauses the function — the next call resumes from the same spot. A function with yield is a generator. For streaming AI responses, this is perfect: we yield each token as it arrives without waiting for all tokens. The caller (StreamingResponse) pulls tokens one at a time via the generator protocol."
+  },
+  {
+    q: "Why do we use Zustand instead of just React's useState?",
+    a: "<code>useState</code> is local to one component. If multiple components need the same data, you'd have to 'lift state up' to a common parent and pass it down through props. With deep component trees, this becomes prop drilling hell. Zustand stores state globally — any component calls <code>useChatStore()</code> and reads or updates the same state directly. It's simpler than Redux and more scalable than Context API for frequent updates."
+  },
+  {
+    q: "Why can't I use Axios for the streaming fetch call?",
+    a: "Axios doesn't support reading response bodies as streams in the browser. It waits for the entire response to arrive before resolving the Promise. The native <code>fetch()</code> API gives you access to <code>response.body</code> as a ReadableStream, which you can read chunk by chunk. For SSE streaming from an AI API, you must use native fetch with a ReadableStream reader."
+  },
+  {
+    q: "What is CORS and what does the CORSMiddleware actually do?",
+    a: "CORS (Cross-Origin Resource Sharing) is a browser security feature. When JavaScript on <code>localhost:5173</code> tries to call <code>localhost:8000</code>, the browser first sends an OPTIONS preflight request asking 'is this allowed?' FastAPI's CORSMiddleware responds with headers like <code>Access-Control-Allow-Origin: http://localhost:5173</code>. The browser sees this and allows the actual request to proceed. Without it, the browser blocks the request entirely — even if the server sent the response, the browser hides it from JavaScript."
+  },
+  {
+    q: "What exactly is a token in the context of LLMs?",
+    a: "A token is the unit of text that LLMs process. It's approximately 3-4 characters on average. 'Hello' is 1 token. 'Hello world' is 2 tokens. 'Hello world!' is 3 tokens. Code has more tokens per character than plain English. LLM APIs charge per token (input tokens + output tokens). <code>max_tokens</code> limits the response length. Models also have a 'context window' — the maximum tokens they can process in one call (e.g. Llama 3.1 supports 128k tokens)."
+  },
+  {
+    q: "Why do we need __init__.py files? What happens if I forget one?",
+    a: "Python requires <code>__init__.py</code> to treat directories as packages (importable modules). Without it, <code>from app.api import chat</code> fails with <code>ModuleNotFoundError: No module named 'app.api'</code>. The file can be completely empty — just its presence is what matters. Python 3.3+ introduced 'namespace packages' that work without __init__.py in some cases, but explicit __init__.py files are clearer and more reliable."
+  },
+  {
+    q: "What is Pydantic and why is it used instead of manual validation?",
+    a: "Pydantic is a data validation library. When FastAPI receives a request, it passes the JSON body to Pydantic, which checks: is <code>messages</code> present? Is it a list? Does each item have <code>role</code> and <code>content</code> strings? If anything fails, FastAPI returns a 422 error automatically with a clear message pointing to the problem field. Without Pydantic, you'd write dozens of lines of <code>if 'messages' not in data: return error...</code> manually."
+  },
+  {
+    q: "What does StreamingResponse do differently from a regular JSONResponse?",
+    a: "A regular Response loads all data into memory, sets Content-Length, and sends everything at once. StreamingResponse keeps the HTTP connection open and sends data as the generator yields it — with no Content-Length header because the total size is unknown. The browser receives and processes data incrementally. This is what makes word-by-word AI responses possible — you'd see nothing for 10+ seconds without streaming, then everything at once."
+  },
+  {
+    q: "Why do we create the Groq client once at module level instead of inside the function?",
+    a: "Creating the client reads the API key and sets up connection configuration. If we did this inside <code>stream_chat_response()</code>, it would run on every single request. At module level, it runs once when Python imports the file. This is more efficient and is called the Singleton pattern — one shared instance for the lifetime of the server. The client is stateless (it doesn't hold conversation state), so sharing it is safe."
+  },
+  {
+    q: "What is the difference between role: 'user', 'assistant', and 'system' in messages?",
+    a: "<code>system</code>: the AI's instructions/persona — set once at the start, not shown to users. Example: 'You are a customer support bot for Acme Corp. Only answer questions about our products.' <code>user</code>: messages from the human. <code>assistant</code>: the AI's previous responses. Most LLM APIs use this three-role convention (defined by OpenAI, adopted by others including Groq)."
+  },
+  {
+    q: "What is useCallback and why do we wrap sendMessage with it?",
+    a: "<code>useCallback(fn, [deps])</code> memoizes a function — it returns the same function reference unless the dependencies change. Without it, every render of the component that uses <code>useChat</code> creates a new <code>sendMessage</code> function. If this function is passed to a child component as a prop, the child re-renders needlessly because it sees a 'new' function every time. With useCallback, the function stays the same across renders unless <code>isLoading</code> or the store actions change."
+  },
+  {
+    q: "What does useEffect do and what is the dependency array?",
+    a: "<code>useEffect(callback, deps)</code> runs <code>callback</code> after the component renders, but only when values in <code>deps</code> changed since the last render. <code>useEffect(() => { scroll() }, [messages])</code> runs the scroll function after every render where <code>messages</code> changed. If <code>deps</code> is <code>[]</code> (empty array), the effect runs only once after the first render. If <code>deps</code> is omitted entirely, the effect runs after every render — usually a bug."
+  },
+  {
+    q: "Why do we escape newlines when sending SSE data?",
+    a: "SSE format uses double newlines (<code>\\n\\n</code>) to mark the end of an event. If the AI response contains real newlines (like in a code block), they would break the SSE parsing — the browser would think the event ended mid-response. We replace <code>\\n</code> with the literal string <code>\\\\n</code> before sending, then reverse this on the React side after receiving. This ensures the SSE framing stays intact."
+  },
+  {
+    q: "How does React know to re-render only the affected components when state changes?",
+    a: "React uses a Virtual DOM — a JavaScript copy of the actual DOM. When Zustand state updates, components that subscribed to that state re-render. React runs their render function, gets the new Virtual DOM tree, compares it to the previous one (diffing/reconciliation), and updates only the actual DOM nodes that changed. For streaming, only the last MessageBubble needs updating — React doesn't re-render the whole chat."
+  },
+  {
+    q: "What is the system prompt and how does it change AI behavior?",
+    a: "The system prompt is an instruction you give the AI before the conversation starts. It sets its persona, rules, and scope. Example: 'You are a Python tutor. Only answer Python questions. Always include code examples.' The AI follows these instructions throughout the conversation. In Phase 3, we use different system prompts per role — admin gets full access, customer gets a restricted support bot."
+  },
+  {
+    q: "What is the difference between FastAPI and Flask?",
+    a: "Flask (2010) is a minimal, synchronous framework — great for simple apps but not designed for async. FastAPI (2018) is built on Starlette and uses async by default — it handles concurrent requests much better. FastAPI also automatically generates OpenAPI docs at <code>/docs</code>, validates requests with Pydantic, and has built-in type hints support. For AI streaming apps that need concurrent connections, FastAPI is the better choice."
+  },
+  {
+    q: "Why does the frontend send all messages on every request instead of just the newest one?",
+    a: "This is called the stateless nature of LLMs. Each API call starts completely fresh — the model has no memory of previous calls. To have a coherent conversation, you must provide the full history. It's like writing a letter to someone with amnesia: you have to remind them of everything said before. This approach keeps the server simple (no session state) but means token costs grow with conversation length."
+  },
+  {
+    q: "What happens if I press Enter twice quickly while the AI is responding?",
+    a: "The <code>if (isLoading) return</code> guard in <code>sendMessage</code> prevents this. While the AI is streaming, <code>isLoading</code> is <code>true</code>. The textarea is also set to <code>disabled={isLoading}</code> in the JSX, so the input is physically disabled during streaming. The send button is also disabled. This prevents queue pollution — sending messages while the AI is mid-response would confuse the conversation state."
+  },
+  {
+    q: "What is Vite and how is it different from Create React App (CRA)?",
+    a: "Create React App (2016) uses Webpack — it bundles all files before starting. For large apps, startup can take 30+ seconds. Vite (2020) uses native ES modules in the browser during development — files are served as-is and only transformed when requested. Cold start is under 1 second. Vite also uses Rollup for production builds (faster than Webpack). CRA is now deprecated. Vite is the modern standard."
+  },
+  {
+    q: "Why is there a try/catch in the generate() function in api/chat.py?",
+    a: "If Groq's API is down, your API key is invalid, or the network fails mid-stream, an exception would be raised inside the generator. Without try/catch, FastAPI would close the connection without telling React what happened — the user would just see the response stop mid-sentence with no explanation. By catching exceptions and yielding <code>data: [ERROR] message\\n\\n</code>, React receives the error and can display a helpful message to the user."
+  },
+  {
+    q: "What is the APIRouter in FastAPI and why not put routes directly in main.py?",
+    a: "APIRouter is like a sub-application — it groups related routes. You can have <code>auth_router</code>, <code>chat_router</code>, <code>admin_router</code>, each in their own file, registered in main.py with different prefixes. If all routes lived in main.py, it would become hundreds of lines. Routers let you scale to 50+ routes without main.py becoming unreadable. In Phase 3, we'll add <code>auth.router</code> and <code>admin.router</code> with one line each in main.py."
+  },
+  {
+    q: "What does optional chaining (?.) do in JavaScript?",
+    a: "<code>messagesEndRef.current?.scrollIntoView()</code> — the <code>?.</code> means: if <code>messagesEndRef.current</code> is null or undefined, stop here and return undefined instead of throwing an error. Without it, if the ref isn't attached to a DOM element yet, you'd get <code>TypeError: Cannot read properties of null</code>. Optional chaining is a safety guard for values that might not exist yet."
+  },
+  {
+    q: "What is the spread operator (...) doing in the Zustand store?",
+    a: "The spread operator copies all items from one array/object into another. <code>[...state.messages, newMsg]</code> creates a brand new array containing all items from the current messages array, plus the new message. <code>{...last, content: last.content + text}</code> creates a new object with all properties of <code>last</code>, but overrides <code>content</code>. This immutability is required by React — you can't mutate existing state objects directly."
+  },
+  {
+    q: "Why does main.py use app.include_router() instead of directly defining routes?",
+    a: "<code>app.include_router(chat.router, prefix='/api')</code> does two things: registers all routes from <code>chat.py</code> onto the main app, and prepends <code>/api</code> to every route path. This means <code>@router.post('/chat/stream')</code> becomes accessible at <code>/api/chat/stream</code>. The prefix keeps the router file clean (no need to type /api everywhere) and lets you change the prefix in one place if needed."
+  },
+  {
+    q: "What is the Cache-Control: no-cache header for in the streaming response?",
+    a: "Some network intermediaries (reverse proxies, CDNs like Cloudflare, corporate firewalls) buffer HTTP responses — they wait to collect some amount of data before forwarding it. For SSE streaming, this completely breaks the experience: the user sees nothing for 30 seconds, then all tokens at once. <code>Cache-Control: no-cache</code> and <code>X-Accel-Buffering: no</code> tell these intermediaries to pass through each chunk immediately without buffering."
+  },
+  {
+    q: "What is the difference between localhost and 127.0.0.1?",
+    a: "They're the same thing. <code>localhost</code> is a hostname that your computer resolves to <code>127.0.0.1</code> (the loopback address). Requests to localhost never leave your machine — they loop back. This is why your React app can talk to FastAPI without internet access during development. On most systems, <code>localhost</code> also resolves to the IPv6 address <code>::1</code>, which occasionally causes issues if a server only listens on IPv4."
+  },
+  {
+    q: "How would I deploy this to production?",
+    a: "Phase 1 has no auth so you wouldn't deploy it publicly yet. But the general approach: (1) Build the React app with <code>npm run build</code> — creates static files in <code>dist/</code>. (2) Serve those static files from FastAPI or a CDN (Vercel, Netlify). (3) Deploy FastAPI to a server (Railway, Render, AWS, etc.) with environment variables set. (4) Change <code>allow_origins</code> in CORS config to your real domain. (5) Use a production ASGI server (Gunicorn + Uvicorn workers) instead of just Uvicorn alone."
+  }
+];
+
+// Build Q&A HTML
+const qaList = document.getElementById('qa-list');
+qaData.forEach((item, i) => {
+  const div = document.createElement('div');
+  div.className = 'qa-item';
+  div.innerHTML = `
+    <div class="qa-q" onclick="toggleQA(this.parentElement)">
+      <span class="qa-num">Q${String(i+1).padStart(2,'0')}</span>
+      <span class="qa-text">${item.q}</span>
+      <span class="qa-chevron">▼</span>
+    </div>
+    <div class="qa-a">${item.a}</div>
+  `;
+  qaList.appendChild(div);
+});
+
+function toggleQA(el) {
+  el.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════
+// GLOSSARY DATA
+// ══════════════════════════════════════════════════════
+const glossaryData = [
+  ["API", "Application Programming Interface — a defined way for software to talk to other software. FastAPI is a framework for building APIs."],
+  ["ASGI", "Asynchronous Server Gateway Interface — the protocol that FastAPI uses. Uvicorn is an ASGI server. Older Python apps used WSGI (synchronous)."],
+  ["async / await", "Keywords that enable non-blocking code. async marks a function as asynchronous; await pauses it until a Promise/coroutine resolves."],
+  ["CORS", "Cross-Origin Resource Sharing — a browser security mechanism that controls which domains can make requests to your API."],
+  ["Coroutine", "A Python function defined with async def. Can be paused and resumed. The building block of async programming."],
+  ["Dependency Injection", "FastAPI pattern where you declare dependencies (like get_current_user) and FastAPI runs them automatically before your route handler."],
+  ["ES Module", "Modern JavaScript module system using import/export. Vite uses native ES modules during development for fast startup."],
+  ["Fetch API", "The browser's built-in function for making HTTP requests. Returns Promises. More powerful than the older XMLHttpRequest."],
+  ["Generator", "A Python function with yield. Produces values one at a time without computing all at once. Used for streaming in ai_service.py."],
+  ["Hook (React)", "A function starting with 'use' that lets you use React features in functional components. useState, useEffect, useRef are built-in hooks."],
+  ["HTTP", "HyperText Transfer Protocol — the language of the web. Every API call is an HTTP request (GET, POST, PUT, DELETE, etc.)."],
+  ["Immutability", "The principle of never modifying existing objects/arrays — always creating new ones. Required by React for change detection."],
+  ["JSON", "JavaScript Object Notation — a text format for data. { \"key\": \"value\" }. The universal language of web APIs."],
+  ["JWT", "JSON Web Token — a signed string used for authentication (Phase 2). Contains user info that can be verified without a database lookup."],
+  ["LLM", "Large Language Model — an AI model trained on text to predict and generate language. Claude, GPT-4, Llama are all LLMs."],
+  ["Middleware", "Code that runs between receiving a request and sending a response. CORSMiddleware is an example."],
+  ["Pydantic", "Python library for data validation using type annotations. FastAPI uses it to validate request/response bodies automatically."],
+  ["ReadableStream", "A browser API for reading data as it arrives, chunk by chunk. Used in api/chat.js to process SSE tokens."],
+  ["Reconciliation", "React's process of comparing the old and new Virtual DOM trees and updating only the changed real DOM nodes."],
+  ["REST", "Representational State Transfer — a convention for API design using HTTP methods (GET = read, POST = create, PUT = update, DELETE = delete)."],
+  ["Singleton", "A design pattern where only one instance of something is created and shared. The Groq client in ai_service.py is a singleton."],
+  ["SSE", "Server-Sent Events — a simple protocol for servers to push data to browsers over HTTP. Used for streaming AI responses."],
+  ["State", "Data in your app that can change over time and should update the UI when it does. Managed by useState or Zustand."],
+  ["StreamingResponse", "A FastAPI response type that keeps the HTTP connection open and sends data incrementally as a generator yields it."],
+  ["Token (AI)", "The unit of text processed by LLMs — roughly 3-4 characters. LLM APIs price per token. max_tokens limits response length."],
+  ["Token (Auth)", "A JWT or session token used to prove identity after login. Sent with every API request in the Authorization header."],
+  ["Type Hint", "Python annotation like def fn(x: str) -> int that documents expected types. Pydantic and FastAPI use them for validation."],
+  ["Uvicorn", "An ASGI server that runs FastAPI apps. The command: uvicorn app.main:app --reload"],
+  ["Virtual DOM", "React's in-memory representation of the real DOM. React diffs the old and new Virtual DOM to minimize actual DOM updates."],
+  ["Vite", "A modern build tool and dev server for frontend apps. Much faster than Webpack/CRA. Uses native ES modules during dev."],
+  ["Zustand", "A lightweight React state management library. Simpler than Redux; any component can access global state directly."],
+];
+
+const glossaryList = document.getElementById('glossary-list');
+glossaryData.sort((a, b) => a[0].localeCompare(b[0])).forEach(([term, def]) => {
+  const div = document.createElement('div');
+  div.className = 'glossary-item';
+  div.innerHTML = `<div class="glossary-term">${term}</div><div class="glossary-def">${def}</div>`;
+  glossaryList.appendChild(div);
+});
+</script>
+</body>
+</html>

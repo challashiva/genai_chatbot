@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 1 Practice Lab — GenAI Chatbot</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Syne:wght@400;600;700&family=Mulish:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: #e2e0d8;
+    --border2: #d0cec4;
+    --text: #2a2825;
+    --text2: #6b6860;
+    --text3: #9e9b94;
+    --accent: #2563eb;
+    --accent-bg: #eff4ff;
+    --accent-border: #bfcffd;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --green-border: #bbf7d0;
+    --amber: #b45309;
+    --amber-bg: #fffbeb;
+    --amber-border: #fde68a;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --red-border: #fecaca;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Mulish', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-brand {
+    padding: 28px 22px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .brand-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .brand-title span { color: var(--accent); }
+
+  .nav-group { padding: 16px 0 8px; border-bottom: 1px solid var(--border); }
+
+  .nav-group-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 0 22px 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 22px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text2);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--surface2); }
+
+  .nav-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: var(--accent-bg);
+    font-weight: 500;
+  }
+
+  .nav-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .progress-sidebar {
+    margin-top: auto;
+    padding: 20px 22px;
+    border-top: 1px solid var(--border);
+  }
+
+  .progress-label {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-track {
+    height: 5px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 10px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* ── Main content ── */
+  .main {
+    padding: 40px 52px;
+    max-width: 860px;
+  }
+
+  /* ── Sections ── */
+  .section { display: none; animation: fadeUp 0.2s ease; }
+  .section.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Typography ── */
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+
+  .page-title span { color: var(--accent); }
+
+  .page-sub {
+    font-size: 14px;
+    color: var(--text2);
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 32px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin: 20px 0 8px;
+  }
+
+  p { color: var(--text2); font-size: 14px; margin-bottom: 12px; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* ── Badges ── */
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    display: inline-block;
+  }
+  .badge-blue { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  /* ── Checklist ── */
+  .checklist-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .checklist-header {
+    padding: 12px 18px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .checklist-header-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: var(--mono);
+  }
+
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .check-row:last-child { border-bottom: none; }
+  .check-row:hover { background: #fafaf8; }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border2);
+    border-radius: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    background: var(--surface);
+  }
+
+  .check-box:hover { border-color: var(--accent); }
+
+  .check-box.done {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .check-box.done::after {
+    content: '';
+    display: block;
+    width: 11px;
+    height: 6px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg) translateY(-1px);
+  }
+
+  .check-text {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.55;
+    flex: 1;
+    transition: all 0.15s;
+  }
+
+  .check-text.done {
+    color: var(--text3);
+    text-decoration: line-through;
+  }
+
+  /* ── Progress bar (main) ── */
+  .progress-main {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .progress-info { flex: 1; }
+  .progress-numbers { font-family: var(--mono); font-size: 11px; color: var(--text3); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--green); border-radius: 10px; transition: width 0.4s; width: 0%; }
+  .progress-emoji { font-size: 28px; }
+
+  /* ── Debug errors ── */
+  .filter-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .error-card {
+    border: 1px solid var(--red-border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .error-head {
+    padding: 12px 16px;
+    background: var(--red-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  .error-head:hover { background: #fde8e8; }
+
+  .error-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .error-chevron {
+    font-size: 11px;
+    color: var(--red);
+    transition: transform 0.2s;
+  }
+
+  .error-card.open .error-chevron { transform: rotate(180deg); }
+
+  .error-body {
+    display: none;
+    padding: 14px 16px;
+    border-top: 1px solid var(--red-border);
+  }
+
+  .error-card.open .error-body { display: block; }
+
+  .error-desc { font-size: 13px; color: var(--text2); margin-bottom: 12px; line-height: 1.6; }
+
+  .fix-reveal {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .fix-reveal-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .fix-reveal-text { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+  /* ── Exercises ── */
+  .exercise-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .exercise-head {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .exercise-head:hover { background: #eae9e2; }
+
+  .exercise-title-wrap { display: flex; align-items: center; gap: 10px; }
+  .exercise-num { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+  .exercise-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .exercise-chev { font-size: 11px; color: var(--text3); transition: transform 0.2s; }
+  .exercise-card.open .exercise-chev { transform: rotate(180deg); }
+
+  .exercise-body {
+    display: none;
+    padding: 16px 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  .exercise-card.open .exercise-body { display: block; }
+
+  .exercise-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .meta-box {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .meta-label { font-family: var(--mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .meta-value { font-size: 12.5px; color: var(--text); line-height: 1.5; }
+
+  .hint-toggle {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--amber-border);
+    border-radius: 6px;
+    background: var(--amber-bg);
+    color: var(--amber);
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.15s;
+  }
+
+  .hint-toggle:hover { background: #fef3c7; }
+
+  .hint-box {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  /* ── Code blocks ── */
+  pre {
+    background: #1e1e2e;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: #cdd6f4;
+    margin: 10px 0;
+  }
+
+  .kw { color: #cba6f7; }
+  .fn { color: #89b4fa; }
+  .st { color: #a6e3a1; }
+  .cm { color: #6c7086; font-style: italic; }
+  .num { color: #fab387; }
+  .dec { color: #89dceb; }
+
+  /* ── Quiz ── */
+  .quiz-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .quiz-q {
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    user-select: none;
+    transition: background 0.15s;
+  }
+
+  .quiz-q:hover { background: var(--surface2); }
+
+  .quiz-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .quiz-text { font-size: 13.5px; color: var(--text); flex: 1; line-height: 1.5; }
+  .quiz-chev { font-size: 11px; color: var(--text3); transition: transform 0.2s; flex-shrink: 0; margin-top: 3px; }
+  .quiz-item.open .quiz-chev { transform: rotate(180deg); }
+
+  .quiz-answer {
+    display: none;
+    padding: 14px 18px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  .quiz-item.open .quiz-answer { display: block; }
+
+  /* ── Callout ── */
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    border-left: 3px solid;
+  }
+
+  .callout-info { background: var(--accent-bg); border-color: var(--accent); color: #1d4ed8; }
+  .callout-tip { background: var(--green-bg); border-color: var(--green); color: #15803d; }
+  .callout-warn { background: var(--amber-bg); border-color: #d97706; color: var(--amber); }
+
+  .callout strong { font-weight: 500; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; }
+    .main { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ══════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-eyebrow">Phase 1 · Practice Lab</div>
+    <div class="brand-title">GenAI <span>Chatbot</span></div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Tasks</div>
+    <div class="nav-item active" onclick="showSection('checklist', this)">
+      <div class="nav-dot" style="background:#16a34a"></div>
+      Improvement checklist
+    </div>
+    <div class="nav-item" onclick="showSection('debug', this)">
+      <div class="nav-dot" style="background:#dc2626"></div>
+      Debug guide
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Hands-on</div>
+    <div class="nav-item" onclick="showSection('exercises', this)">
+      <div class="nav-dot" style="background:#2563eb"></div>
+      Coding exercises
+    </div>
+    <div class="nav-item" onclick="showSection('quiz', this)">
+      <div class="nav-dot" style="background:#9333ea"></div>
+      Self-test quiz
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Reference</div>
+    <div class="nav-item" onclick="showSection('snippets', this)">
+      <div class="nav-dot" style="background:#b45309"></div>
+      Useful code snippets
+    </div>
+    <div class="nav-item" onclick="showSection('phase2', this)">
+      <div class="nav-dot" style="background:#0891b2"></div>
+      Ready for Phase 2?
+    </div>
+  </div>
+
+  <div class="progress-sidebar">
+    <div class="progress-label">
+      <span>Checklist progress</span>
+      <span id="sidebar-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="sidebar-bar"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════ -->
+<main class="main">
+
+<!-- ─────────────────────────────────────
+     CHECKLIST
+───────────────────────────────────── -->
+<section class="section active" id="sec-checklist">
+  <div class="page-title">Improvement <span>Checklist</span></div>
+  <div class="page-sub">20 tasks to complete before moving to Phase 2. Check them off as you go.</div>
+
+  <div class="progress-main">
+    <div class="progress-emoji" id="progress-emoji">🌱</div>
+    <div class="progress-info">
+      <div class="progress-numbers">
+        <span id="progress-text">0 of 20 complete</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-bar-fill" id="main-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- Group 1 -->
+  <div class="checklist-group">
+    <div class="checklist-header">
+      <div class="checklist-header-title">Backend — core understanding</div>
+      <span class="badge badge-blue">Python</span>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="0"></div>
+      <div class="check-text">Run <code>uvicorn app.main:app --reload</code> and see the server start without errors in the terminal</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="1"></div>
+      <div class="check-text">Open <code>http://localhost:8000/docs</code> — explore the auto-generated Swagger UI and test an endpoint from the browser</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="2"></div>
+      <div class="check-text">Test <code>POST /api/chat/simple</code> directly from Swagger UI — send a real message and read the AI response</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="3"></div>
+      <div class="check-text">Add a <code>print(text)</code> inside the <code>for chunk in stream</code> loop in <code>ai_service.py</code> — watch each token appear in the terminal as it streams</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="4"></div>
+      <div class="check-text">Intentionally set a wrong API key in <code>.env</code> — observe the exact error, then fix it and understand what caused it</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="5"></div>
+      <div class="check-text">Change <code>max_tokens</code> to <code>30</code> in config — send a long question and notice how the response gets cut off mid-sentence</div>
+    </div>
+  </div>
+
+  <!-- Group 2 -->
+  <div class="checklist-group">
+    <div class="checklist-header">
+      <div class="checklist-header-title">Backend — improvements to build</div>
+      <span class="badge badge-amber">Upgrade</span>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="6"></div>
+      <div class="check-text">Add input validation in <code>api/chat.py</code>: if <code>request.messages</code> is empty, raise a <code>400 HTTPException</code> with message "Messages cannot be empty" before calling Groq</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="7"></div>
+      <div class="check-text">Add a <code>max_message_length</code> check — if any single message content exceeds 2000 characters, reject it with a clear error</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="8"></div>
+      <div class="check-text">Add Python <code>logging</code> to <code>ai_service.py</code> — log the number of messages and total character count at the start of each request</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="9"></div>
+      <div class="check-text">Add a new route <code>GET /api/models</code> in <code>api/chat.py</code> that returns a JSON list of available Groq model names</div>
+    </div>
+  </div>
+
+  <!-- Group 3 -->
+  <div class="checklist-group">
+    <div class="checklist-header">
+      <div class="checklist-header-title">Frontend — core understanding</div>
+      <span class="badge badge-blue">React</span>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="10"></div>
+      <div class="check-text">Install React DevTools browser extension — open it, find the Zustand store, and watch <code>messages</code> array grow as you chat</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="11"></div>
+      <div class="check-text">Add <code>console.log('chunk:', chunk)</code> inside the <code>onChunk</code> callback in <code>api/chat.js</code> — see every SSE token arrive in the browser console</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="12"></div>
+      <div class="check-text">Open the Network tab in browser DevTools — watch the <code>/api/chat/stream</code> request stay open (pending) the entire time the AI is responding</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="13"></div>
+      <div class="check-text">In <code>useChat.js</code>, replace <code>getMessages()</code> with just <code>messages</code> — send a message and observe the bug (the user message is missing from the API call), then revert</div>
+    </div>
+  </div>
+
+  <!-- Group 4 -->
+  <div class="checklist-group">
+    <div class="checklist-header">
+      <div class="checklist-header-title">Frontend — improvements to build</div>
+      <span class="badge badge-amber">Upgrade</span>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="14"></div>
+      <div class="check-text">Add a character counter below the textarea showing e.g. <code>142 / 2000</code> — make it turn red when over 1800 characters</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="15"></div>
+      <div class="check-text">Add a copy button to each assistant <code>MessageBubble</code> — clicking it copies the message text to the clipboard using <code>navigator.clipboard.writeText()</code></div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="16"></div>
+      <div class="check-text">Make the textarea auto-grow in height as the user types — up to a max of 6 rows, then scroll internally (hint: use <code>scrollHeight</code>)</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="17"></div>
+      <div class="check-text">Add a message count to the chat header — e.g. a small badge showing <code>6 messages</code> that updates as the conversation grows</div>
+    </div>
+  </div>
+
+  <!-- Group 5 -->
+  <div class="checklist-group">
+    <div class="checklist-header">
+      <div class="checklist-header-title">Understanding goals</div>
+      <span class="badge badge-green">Concepts</span>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="18"></div>
+      <div class="check-text">Explain out loud (or write in a notes file) why we send the full conversation history with every API request, not just the latest message</div>
+    </div>
+    <div class="check-row">
+      <div class="check-box" onclick="toggleCheck(this)" data-id="19"></div>
+      <div class="check-text">Draw the complete SSE flow on paper — from <code>yield text</code> in Python all the way to <code>appendToLastMessage()</code> updating the React UI</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────
+     DEBUG GUIDE
+───────────────────────────────────── -->
+<section class="section" id="sec-debug">
+  <div class="page-title">Debug <span>Guide</span></div>
+  <div class="page-sub">The 10 most common Phase 1 errors — what causes them and exactly how to fix them.</div>
+
+  <div class="filter-row" id="filter-row">
+    <button class="filter-btn active" onclick="filterErrors('all', this)">All errors</button>
+    <button class="filter-btn" onclick="filterErrors('backend', this)">Backend</button>
+    <button class="filter-btn" onclick="filterErrors('frontend', this)">Frontend</button>
+    <button class="filter-btn" onclick="filterErrors('connection', this)">Connection</button>
+  </div>
+
+  <div id="error-list"></div>
+</section>
+
+<!-- ─────────────────────────────────────
+     EXERCISES
+───────────────────────────────────── -->
+<section class="section" id="sec-exercises">
+  <div class="page-title">Coding <span>Exercises</span></div>
+  <div class="page-sub">5 features to build yourself — ordered from easy to challenging. Each teaches a skill you'll need in Phase 2.</div>
+
+  <div class="callout callout-tip">
+    <strong>How to use these:</strong> Try to implement each exercise on your own first. Only look at the hint when you're stuck. The goal is getting comfortable making changes to the codebase — not just reading it.
+  </div>
+
+  <div id="exercise-list"></div>
+</section>
+
+<!-- ─────────────────────────────────────
+     QUIZ
+───────────────────────────────────── -->
+<section class="section" id="sec-quiz">
+  <div class="page-title">Self-test <span>Quiz</span></div>
+  <div class="page-sub">8 questions testing the "why" behind Phase 1. If you can answer all 8, you're ready for Phase 2.</div>
+
+  <div class="callout callout-info">
+    <strong>How to use this:</strong> Read each question and try to answer it in your head before clicking to reveal. Be honest with yourself — understanding beats memorising.
+  </div>
+
+  <div id="quiz-list"></div>
+</section>
+
+<!-- ─────────────────────────────────────
+     CODE SNIPPETS
+───────────────────────────────────── -->
+<section class="section" id="sec-snippets">
+  <div class="page-title">Useful Code <span>Snippets</span></div>
+  <div class="page-sub">Ready-to-use patterns for the Phase 1 improvements. Copy, paste, and adapt.</div>
+
+  <h2>Backend — input validation</h2>
+  <p>Add this at the top of <code>chat_stream()</code> in <code>api/chat.py</code> before calling <code>ai_service</code>:</p>
+  <pre><span class="cm"># Validate messages is not empty</span>
+<span class="kw">if not</span> request.messages:
+    <span class="kw">raise</span> HTTPException(
+        status_code=<span class="num">400</span>,
+        detail=<span class="st">"Messages cannot be empty"</span>
+    )
+
+<span class="cm"># Validate individual message lengths</span>
+<span class="kw">for</span> msg <span class="kw">in</span> request.messages:
+    <span class="kw">if</span> <span class="fn">len</span>(msg.content) > <span class="num">2000</span>:
+        <span class="kw">raise</span> HTTPException(
+            status_code=<span class="num">400</span>,
+            detail=<span class="st">f"Message too long ({len(msg.content)} chars). Max 2000."</span>
+        )</pre>
+
+  <h2>Backend — logging</h2>
+  <p>Add to the top of <code>ai_service.py</code> and inside <code>stream_chat_response()</code>:</p>
+  <pre><span class="cm"># At top of file</span>
+<span class="kw">import</span> logging
+<span class="kw">import</span> time
+
+logger = logging.<span class="fn">getLogger</span>(__name__)
+
+<span class="cm"># Inside stream_chat_response(), before the for loop:</span>
+total_chars = <span class="fn">sum</span>(<span class="fn">len</span>(m.content) <span class="kw">for</span> m <span class="kw">in</span> messages)
+logger.<span class="fn">info</span>(<span class="st">f"Request: {len(messages)} messages, {total_chars} total chars"</span>)
+start = time.<span class="fn">time</span>()
+token_count = <span class="num">0</span>
+
+<span class="cm"># Inside the for loop, after yield text:</span>
+token_count += <span class="num">1</span>
+
+<span class="cm"># After the for loop ends:</span>
+elapsed = <span class="fn">round</span>(time.<span class="fn">time</span>() - start, <span class="num">2</span>)
+logger.<span class="fn">info</span>(<span class="st">f"Done: {elapsed}s, {token_count} tokens"</span>)</pre>
+
+  <h2>Frontend — character counter</h2>
+  <p>Add this state and JSX inside <code>ChatWindow.jsx</code>:</p>
+  <pre><span class="cm">// Add this state near the top of ChatWindow()</span>
+<span class="kw">const</span> MAX_CHARS = <span class="num">2000</span>
+<span class="kw">const</span> charCount = inputText.length
+<span class="kw">const</span> isNearLimit = charCount > <span class="num">1800</span>
+
+<span class="cm">// Add this JSX below the textarea, inside the input area div:</span>
+&lt;div style={{
+  fontSize: <span class="st">'11px'</span>,
+  textAlign: <span class="st">'right'</span>,
+  color: isNearLimit ? <span class="st">'#dc2626'</span> : <span class="st">'#9ca3af'</span>,
+  marginTop: <span class="st">'4px'</span>,
+  fontFamily: <span class="st">'monospace'</span>
+}}&gt;
+  {charCount} / {MAX_CHARS}
+&lt;/div&gt;</pre>
+
+  <h2>Frontend — auto-grow textarea</h2>
+  <p>Replace the <code>onChange</code> on the textarea in <code>ChatWindow.jsx</code>:</p>
+  <pre><span class="dec">onChange</span>={(e) => {
+  <span class="fn">setInputText</span>(e.target.value)
+  <span class="cm">// Reset height first so it can shrink</span>
+  e.target.style.height = <span class="st">'auto'</span>
+  <span class="cm">// Set height to content, max 6 rows (6 * 24px)</span>
+  e.target.style.height = <span class="fn">Math</span>.min(e.target.scrollHeight, <span class="num">144</span>) + <span class="st">'px'</span>
+}}</pre>
+
+  <h2>Frontend — copy button for messages</h2>
+  <p>Add this inside <code>MessageBubble.jsx</code> — only shown on assistant messages:</p>
+  <pre><span class="kw">const</span> [copied, setCopied] = <span class="fn">useState</span>(<span class="kw">false</span>)
+
+<span class="kw">const</span> handleCopy = <span class="kw">async</span> () => {
+  <span class="kw">await</span> navigator.clipboard.<span class="fn">writeText</span>(content)
+  <span class="fn">setCopied</span>(<span class="kw">true</span>)
+  <span class="fn">setTimeout</span>(() => <span class="fn">setCopied</span>(<span class="kw">false</span>), <span class="num">2000</span>)
+}
+
+<span class="cm">// In JSX, below the bubble div — only for assistant:</span>
+{!isUser && (
+  &lt;button onClick={handleCopy} style={{
+    background: <span class="st">'none'</span>, border: <span class="st">'none'</span>,
+    fontSize: <span class="st">'11px'</span>, color: <span class="st">'#9ca3af'</span>,
+    cursor: <span class="st">'pointer'</span>, marginTop: <span class="st">'4px'</span>, marginLeft: <span class="st">'40px'</span>
+  }}&gt;
+    {copied ? <span class="st">'✓ Copied'</span> : <span class="st">'Copy'</span>}
+  &lt;/button&gt;
+)}</pre>
+
+  <h2>Frontend — stop streaming with AbortController</h2>
+  <p>The most complex improvement. Changes span <code>api/chat.js</code>, <code>useChat.js</code>, and <code>ChatWindow.jsx</code>:</p>
+  <pre><span class="cm">// --- api/chat.js: add signal parameter ---</span>
+<span class="kw">export async function</span> <span class="fn">streamChat</span>({ messages, onChunk, onDone, onError, signal }) {
+  <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'/api/chat/stream'</span>, {
+    method: <span class="st">'POST'</span>,
+    headers: { <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span> },
+    body: JSON.<span class="fn">stringify</span>({ messages }),
+    signal,  <span class="cm">// ← add this</span>
+  })
+  ...
+}
+
+<span class="cm">// --- useChat.js: add AbortController ---</span>
+<span class="kw">const</span> abortRef = <span class="fn">useRef</span>(<span class="kw">null</span>)
+
+<span class="kw">const</span> sendMessage = <span class="fn">useCallback</span>(<span class="kw">async</span> (userText) => {
+  abortRef.current = <span class="kw">new</span> AbortController()
+  <span class="kw">await</span> <span class="fn">streamChat</span>({ ..., signal: abortRef.current.signal })
+}, [...])
+
+<span class="kw">const</span> stopStreaming = <span class="fn">useCallback</span>(() => {
+  abortRef.current?.<span class="fn">abort</span>()
+  <span class="fn">finishStreaming</span>()
+}, [finishStreaming])
+
+<span class="cm">// --- ChatWindow.jsx: show Stop button ---</span>
+{isLoading && (
+  &lt;button onClick={stopStreaming}&gt;Stop&lt;/button&gt;
+)}</pre>
+</section>
+
+<!-- ─────────────────────────────────────
+     PHASE 2 READINESS
+───────────────────────────────────── -->
+<section class="section" id="sec-phase2">
+  <div class="page-title">Ready for <span>Phase 2?</span></div>
+  <div class="page-sub">A checklist of things you should understand before moving on — and a preview of what Phase 2 adds.</div>
+
+  <div class="callout callout-warn">
+    <strong>Don't rush.</strong> Phase 2 introduces JWT auth, databases, password hashing, and route guards. If Phase 1 concepts feel shaky, they'll feel impossible in Phase 2.
+  </div>
+
+  <h2>You're ready if you can answer these</h2>
+  <div id="readiness-list"></div>
+
+  <h2>What Phase 2 adds</h2>
+  <div class="checklist-group">
+    <div class="checklist-header">
+      <div class="checklist-header-title">New files in Phase 2</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>backend/app/models/user.py</code> — SQLAlchemy User model with <code>id</code>, <code>email</code>, <code>password_hash</code>, <code>role</code> columns</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>backend/app/api/auth.py</code> — <code>POST /api/auth/login</code> and <code>POST /api/auth/register</code> routes</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>backend/app/core/security.py</code> — JWT creation, JWT verification, bcrypt password hashing</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>backend/app/core/database.py</code> — SQLAlchemy engine, session factory, Base model</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>frontend/src/pages/Login.jsx</code> — login form component with email + password fields</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>frontend/src/store/authStore.js</code> — Zustand store holding JWT token, user info, role</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>frontend/src/guards/ProtectedRoute.jsx</code> — redirects to <code>/login</code> if no token in authStore</div>
+    </div>
+    <div class="check-row" style="cursor:default">
+      <div style="width:20px;flex-shrink:0"></div>
+      <div class="check-text"><code>frontend/src/guards/RoleGuard.jsx</code> — hides/shows UI elements based on the user's role</div>
+    </div>
+  </div>
+
+  <h2>Phase 1 files that stay unchanged</h2>
+  <div class="callout callout-tip">
+    <strong>Good news:</strong> <code>ai_service.py</code>, <code>api/chat.py</code>, <code>chatStore.js</code>, <code>api/chat.js</code>, <code>ChatWindow.jsx</code>, <code>MessageBubble.jsx</code>, <code>TypingIndicator.jsx</code> — all survive into Phase 2 without modification. You're adding, not rewriting.
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════
+// CHECKLIST
+// ══════════════════════════════════════════════
+var checkState = {};
+var TOTAL = 20;
+
+function toggleCheck(box) {
+  var id = box.dataset.id;
+  checkState[id] = !checkState[id];
+  var done = checkState[id];
+  box.classList.toggle('done', done);
+  var textEl = box.parentElement.querySelector('.check-text');
+  textEl.classList.toggle('done', done);
+  updateProgress();
+}
+
+function updateProgress() {
+  var doneCount = Object.values(checkState).filter(Boolean).length;
+  var pct = Math.round(doneCount / TOTAL * 100);
+  document.getElementById('progress-text').textContent = doneCount + ' of ' + TOTAL + ' complete';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('main-bar').style.width = pct + '%';
+  document.getElementById('sidebar-bar').style.width = pct + '%';
+  document.getElementById('sidebar-pct').textContent = pct + '%';
+  var emojis = ['🌱','🌱','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿','⭐','⭐','⭐','⭐','🎉'];
+  document.getElementById('progress-emoji').textContent = emojis[doneCount] || '🎉';
+}
+
+// ══════════════════════════════════════════════
+// DEBUG ERRORS
+// ══════════════════════════════════════════════
+var errors = [
+  {
+    cat: 'connection',
+    title: 'CORS error in browser console',
+    desc: 'React can\'t reach FastAPI. The browser console shows something like: "Access-Control-Allow-Origin header is missing" or "has been blocked by CORS policy."',
+    fix: 'Check that <code>CORSMiddleware</code> is added in <code>main.py</code> and <code>allow_origins</code> includes exactly <code>http://localhost:5173</code> (no trailing slash). Also confirm the backend is actually running — open <code>http://localhost:8000</code> in a browser tab to verify.'
+  },
+  {
+    cat: 'backend',
+    title: 'ModuleNotFoundError: No module named \'app\'',
+    desc: 'Running uvicorn from the wrong directory. Python can\'t find the <code>app</code> package.',
+    fix: 'Make sure you <code>cd backend</code> first, then run <code>uvicorn app.main:app --reload</code>. Also verify all <code>__init__.py</code> files exist in <code>app/</code>, <code>app/api/</code>, <code>app/core/</code>, <code>app/services/</code>, and <code>app/schemas/</code>.'
+  },
+  {
+    cat: 'backend',
+    title: 'AuthenticationError from Groq (401)',
+    desc: 'The Groq API returns a 401 Unauthorized. Your API key is missing, invalid, or not being read from the .env file.',
+    fix: 'Check your <code>backend/.env</code> file exists (not just <code>.env.example</code>). The line should be exactly <code>API_KEY=gsk_...</code> with no spaces around the <code>=</code>. Temporarily add <code>print(settings.api_key)</code> at the bottom of <code>config.py</code> and restart to confirm the value is being read.'
+  },
+  {
+    cat: 'connection',
+    title: '"Connection refused" when React calls the API',
+    desc: 'The fetch() call throws a network error. The request never reaches FastAPI at all.',
+    fix: 'FastAPI is not running. Open a terminal, <code>cd backend</code>, activate your virtual environment, and run <code>uvicorn app.main:app --reload --port 8000</code>. Then visit <code>http://localhost:8000</code> directly in your browser to confirm it\'s up.'
+  },
+  {
+    cat: 'backend',
+    title: '422 Unprocessable Entity from FastAPI',
+    desc: 'FastAPI rejects your request with a 422 error. The JSON body failed Pydantic validation.',
+    fix: 'The JSON structure from React doesn\'t match the <code>ChatRequest</code> schema. Check you\'re sending <code>messages</code> (not <code>message</code>) and each message has both <code>role</code> and <code>content</code> string fields. The 422 response body includes a <code>detail</code> array that pinpoints the exact field — log <code>response.json()</code> in the browser console to read it.'
+  },
+  {
+    cat: 'frontend',
+    title: 'Streaming stops after the first word',
+    desc: 'The AI response cuts off immediately. Only one word or token appears, then nothing.',
+    fix: 'Check the SSE parsing loop in <code>api/chat.js</code>. Add <code>console.log("raw:", text)</code> right after <code>decoder.decode(value)</code> to see raw SSE data. The <code>if (!line.startsWith("data: "))</code> guard might be filtering valid chunks. Also check that <code>[DONE]</code> isn\'t arriving earlier than expected.'
+  },
+  {
+    cat: 'frontend',
+    title: 'Response appears all at once — no streaming effect',
+    desc: 'The AI response loads as a block after a delay instead of word-by-word. The streaming pipeline is broken somewhere.',
+    fix: 'Something is buffering the stream. Verify <code>Cache-Control: no-cache</code> header is in the StreamingResponse in <code>api/chat.py</code>. Check that Vite proxy has <code>changeOrigin: true</code> in <code>vite.config.js</code>. As a test, add <code>console.log("chunk received")</code> in <code>api/chat.js</code> to see if chunks arrive gradually or all at once.'
+  },
+  {
+    cat: 'frontend',
+    title: 'Zustand state update not re-rendering React',
+    desc: 'You call a store action but the component UI doesn\'t update. The data changed but the screen looks the same.',
+    fix: 'You\'re mutating state directly. Never do <code>state.messages.push(x)</code> — React can\'t detect this because the array reference is the same. Always create new arrays: <code>[...state.messages, x]</code>. Also verify the component is actually reading from the store field that changed.'
+  },
+  {
+    cat: 'frontend',
+    title: 'Input is always one character behind',
+    desc: 'You type "hello" but React state shows "hell". The last typed character is never in the state.',
+    fix: 'This is a classic React gotcha — <code>setState</code> is asynchronous. If you read <code>inputText</code> right after <code>setInputText(e.target.value)</code> in the same event handler, you get the old value. Read from <code>e.target.value</code> directly instead, or use the functional form of setState.'
+  },
+  {
+    cat: 'backend',
+    title: 'Virtual environment not activated',
+    desc: 'Running <code>pip install</code> or <code>uvicorn</code> but packages aren\'t found or the wrong Python version is used.',
+    fix: 'Activate your virtual environment first: on Mac/Linux run <code>source venv/bin/activate</code>; on Windows run <code>venv\\Scripts\\activate</code>. You should see <code>(venv)</code> at the start of your terminal prompt. Then re-run <code>pip install -r requirements.txt</code> and <code>uvicorn app.main:app --reload</code>.'
+  }
+];
+
+function filterErrors(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderErrors(cat);
+}
+
+function renderErrors(cat) {
+  var list = document.getElementById('error-list');
+  list.innerHTML = '';
+  var filtered = cat === 'all' ? errors : errors.filter(function(e) { return e.cat === cat; });
+  filtered.forEach(function(err, i) {
+    var catBadge = { backend: 'badge-blue', frontend: 'badge-amber', connection: 'badge-red' }[err.cat] || 'badge-blue';
+    var catLabel = err.cat.charAt(0).toUpperCase() + err.cat.slice(1);
+    var card = document.createElement('div');
+    card.className = 'error-card';
+    card.innerHTML =
+      '<div class="error-head" onclick="this.parentElement.classList.toggle(\'open\')">' +
+        '<div class="error-title">' +
+          '<span class="badge ' + catBadge + '">' + catLabel + '</span>' +
+          err.title +
+        '</div>' +
+        '<span class="error-chevron">▼</span>' +
+      '</div>' +
+      '<div class="error-body">' +
+        '<div class="error-desc">' + err.desc + '</div>' +
+        '<div class="fix-reveal">' +
+          '<div class="fix-reveal-title">How to fix it</div>' +
+          '<div class="fix-reveal-text">' + err.fix + '</div>' +
+        '</div>' +
+      '</div>';
+    list.appendChild(card);
+  });
+}
+
+renderErrors('all');
+
+// ══════════════════════════════════════════════
+// EXERCISES
+// ══════════════════════════════════════════════
+var exercises = [
+  {
+    num: '01',
+    title: 'Add a token counter that increments while streaming',
+    level: 'Easy',
+    levelClass: 'badge-green',
+    desc: 'While the AI is streaming, show a small live counter (e.g. <code>tokens: 42</code>) that increments with every chunk received. Add it below the assistant bubble or inside the typing indicator.',
+    files: '<code>chatStore.js</code> (add <code>tokenCount</code> state) · <code>ChatWindow.jsx</code> (display it)',
+    learn: 'Adding new state fields to Zustand, reading store values in a component, resetting state when streaming ends',
+    hint: 'In chatStore, add <code>tokenCount: 0</code> to initial state. In <code>appendToLastMessage</code>, also call <code>set(s => ({ tokenCount: s.tokenCount + 1 }))</code>. Reset it to 0 in <code>finishStreaming()</code>. Read it in ChatWindow with <code>const { tokenCount, isLoading } = useChatStore()</code> and show it when <code>isLoading</code> is true.'
+  },
+  {
+    num: '02',
+    title: 'Make the system prompt editable by the user',
+    level: 'Easy',
+    levelClass: 'badge-green',
+    desc: 'Add a small settings panel (toggleable with a gear icon in the header) where the user can type a custom system prompt. This prompt gets sent with every message instead of the default one.',
+    files: '<code>chatStore.js</code> (add <code>systemPrompt</code> state) · <code>useChat.js</code> (pass it to API) · <code>ChatWindow.jsx</code> (settings UI)',
+    learn: 'Threading data through store → hook → API call, controlled textarea inputs in React, conditional rendering',
+    hint: 'Add <code>systemPrompt: "You are a helpful assistant."</code> and <code>setSystemPrompt: (p) => set({ systemPrompt: p })</code> to chatStore. In useChat.js, read <code>systemPrompt</code> from the store and pass it as the <code>system_prompt</code> field in the <code>streamChat()</code> call. In ChatWindow, track a <code>showSettings</code> boolean with useState, and show a textarea that calls <code>setSystemPrompt()</code> on change.'
+  },
+  {
+    num: '03',
+    title: 'Auto-grow the textarea as the user types',
+    level: 'Medium',
+    levelClass: 'badge-blue',
+    desc: 'The textarea currently stays 1 row tall. Make it expand as the user types more lines (up to a max of 6 rows), then scroll internally when it hits the limit.',
+    files: '<code>ChatWindow.jsx</code> only',
+    learn: 'Accessing DOM properties with refs, imperative DOM manipulation from React event handlers, the difference between CSS height and scrollHeight',
+    hint: 'In the <code>onChange</code> handler, after <code>setInputText(e.target.value)</code>, add:<br><code>e.target.style.height = "auto"</code> (reset first so it can shrink)<br><code>e.target.style.height = Math.min(e.target.scrollHeight, 144) + "px"</code><br>Also reset height to <code>"auto"</code> inside <code>handleSend()</code> after clearing the input. Remove the fixed <code>rows={1}</code> prop from the textarea.'
+  },
+  {
+    num: '04',
+    title: 'Add a Stop button to cancel generation mid-stream',
+    level: 'Medium',
+    levelClass: 'badge-blue',
+    desc: 'While the AI is streaming, show a Stop button. When clicked, immediately cancel the fetch request. The partial response already received should stay visible.',
+    files: '<code>api/chat.js</code> (add AbortController signal) · <code>useChat.js</code> (create controller, expose stopStreaming) · <code>ChatWindow.jsx</code> (show Stop button when isLoading)',
+    learn: 'AbortController for cancelling fetch requests, useRef for mutable values that don\'t trigger re-renders, the difference between React state and refs',
+    hint: 'In useChat.js, add <code>const abortRef = useRef(null)</code>. In sendMessage, before the streamChat call: <code>abortRef.current = new AbortController()</code>. Pass <code>signal: abortRef.current.signal</code> to streamChat. In api/chat.js, add <code>signal</code> to the function params and pass it to <code>fetch(..., { signal })</code>. Wrap the reader loop in try/catch — an AbortError will be thrown when cancelled. In useChat, add <code>const stopStreaming = () => { abortRef.current?.abort(); finishStreaming(); }</code>.'
+  },
+  {
+    num: '05',
+    title: 'Add request timing and token counting to the backend',
+    level: 'Challenge',
+    levelClass: 'badge-amber',
+    desc: 'Log how long each AI request takes from first token to last token. After the stream ends, print something like: <code>Completed: 3.42s · 187 tokens · 12 msg history</code> to the server terminal.',
+    files: '<code>ai_service.py</code> only',
+    learn: 'Python\'s time module, tracking state inside a generator function, understanding when code runs before vs after yield, f-string formatting',
+    hint: 'Add <code>import time</code> at the top. Before the for loop: <code>start = time.time(); token_count = 0</code>. Inside the loop after <code>yield text</code>: <code>token_count += 1</code>. After the for loop exits naturally, add: <code>elapsed = round(time.time() - start, 2); print(f"Completed: {elapsed}s · {token_count} tokens · {len(messages)} msg history")</code>. Note: the code after the for loop only runs when the generator is fully exhausted — test this by checking the terminal after a complete response.'
+  }
+];
+
+var exList = document.getElementById('exercise-list');
+exercises.forEach(function(ex) {
+  var card = document.createElement('div');
+  card.className = 'exercise-card';
+  card.innerHTML =
+    '<div class="exercise-head" onclick="this.parentElement.classList.toggle(\'open\')">' +
+      '<div class="exercise-title-wrap">' +
+        '<span class="exercise-num">' + ex.num + '</span>' +
+        '<span class="exercise-title">' + ex.title + '</span>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<span class="badge ' + ex.levelClass + '">' + ex.level + '</span>' +
+        '<span class="exercise-chev">▼</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="exercise-body">' +
+      '<p style="margin-bottom:12px">' + ex.desc + '</p>' +
+      '<div class="exercise-meta">' +
+        '<div class="meta-box"><div class="meta-label">Files to change</div><div class="meta-value">' + ex.files + '</div></div>' +
+        '<div class="meta-box"><div class="meta-label">What you learn</div><div class="meta-value">' + ex.learn + '</div></div>' +
+      '</div>' +
+      '<button class="hint-toggle" onclick="toggleExHint(this)">Show hint</button>' +
+      '<div class="hint-box">' + ex.hint + '</div>' +
+    '</div>';
+  exList.appendChild(card);
+});
+
+function toggleExHint(btn) {
+  var box = btn.nextElementSibling;
+  var open = box.style.display === 'block';
+  box.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? 'Show hint' : 'Hide hint';
+}
+
+// ══════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════
+var quizData = [
+  { q: 'Why do we send the full conversation history with every request instead of just the latest message?', a: 'LLMs are completely stateless — each API call starts fresh with zero memory of previous calls. By sending all previous messages, we give the model the full context it needs to give coherent follow-up answers. Without this, every response would start from scratch as if the conversation never happened.' },
+  { q: 'What would happen if you removed <code>async</code> from a FastAPI route handler?', a: 'The route would run synchronously, blocking the entire server thread while waiting for Groq. No other requests could be processed until it finishes. With <code>async def</code>, the server can handle other requests concurrently while awaiting the AI response — this is critical for production performance.' },
+  { q: 'Why does <code>appendToLastMessage</code> spread into a new array (<code>[...state.messages]</code>) instead of just pushing to the existing one?', a: 'React uses reference equality to detect state changes. If you push to the existing array, its reference stays the same — React thinks nothing changed and won\'t re-render. Creating a new array with the spread operator gives React a new reference, so it detects the change and updates the UI.' },
+  { q: 'Why do we call <code>getMessages()</code> after <code>addMessage()</code> in <code>useChat.js</code> instead of just using the <code>messages</code> variable?', a: 'Zustand state updates are asynchronous from React\'s perspective — the <code>messages</code> variable in the hook closure still holds the old value right after <code>addMessage()</code> is called. <code>getMessages()</code> internally calls Zustand\'s <code>get()</code>, which synchronously reads the latest store state including the just-added message.' },
+  { q: 'What does <code>stream=True</code> actually change about how Groq responds?', a: 'Without it, Groq generates the entire response internally before sending anything — you\'d wait 5–15 seconds for the full text. With <code>stream=True</code>, Groq sends each token as it\'s generated. The Python SDK returns an iterable that yields chunks one by one, which our generator passes straight to the SSE response.' },
+  { q: 'What is the purpose of the Vite proxy in <code>vite.config.js</code>?', a: 'It forwards any request starting with <code>/api</code> from the Vite dev server (port 5173) to FastAPI (port 8000). This solves two problems: it avoids CORS issues (browser thinks everything is same-origin), and it means our React code never has a hardcoded backend port. In production, a real reverse proxy (like Nginx) does the same job.' },
+  { q: 'Why do we add <code>Cache-Control: no-cache</code> to the streaming response?', a: 'Without it, any proxy, CDN, corporate firewall, or even some browsers might buffer the HTTP response — collecting chunks before forwarding them. For SSE streaming, this is catastrophic: the user sees nothing for the entire generation time, then all tokens at once. This header tells every intermediary to forward each chunk immediately without buffering.' },
+  { q: 'What is the difference between <code>useRef</code> and <code>useState</code> in React?', a: '<code>useState</code> triggers a re-render when its value changes — it\'s for data that should update the UI. <code>useRef</code> stores a mutable value that persists across renders but changing it does NOT trigger a re-render — it\'s for things like DOM element references or the AbortController in Exercise 4. Think of a ref as a box you can look inside without React noticing.' }
+];
+
+var quizList = document.getElementById('quiz-list');
+quizData.forEach(function(item, i) {
+  var div = document.createElement('div');
+  div.className = 'quiz-item';
+  div.innerHTML =
+    '<div class="quiz-q" onclick="this.parentElement.classList.toggle(\'open\')">' +
+      '<span class="quiz-num">Q' + String(i + 1).padStart(2, '0') + '</span>' +
+      '<span class="quiz-text">' + item.q + '</span>' +
+      '<span class="quiz-chev">▼</span>' +
+    '</div>' +
+    '<div class="quiz-answer">' + item.a + '</div>';
+  quizList.appendChild(div);
+});
+
+// ══════════════════════════════════════════════
+// PHASE 2 READINESS
+// ══════════════════════════════════════════════
+var readinessQ = [
+  'Can you explain what happens at each step when a user sends a message — from keypress to AI response appearing on screen?',
+  'Can you explain why we can\'t just push to an array in Zustand and why we must create new arrays?',
+  'Can you explain what SSE is, what the data: format looks like, and why we use it instead of WebSockets?',
+  'Can you explain what async/await does and why FastAPI route handlers should be async?',
+  'Can you explain why CORS middleware is needed and what happens without it?'
+];
+
+var readinessList = document.getElementById('readiness-list');
+readinessQ.forEach(function(q, i) {
+  var div = document.createElement('div');
+  div.className = 'quiz-item';
+  div.innerHTML =
+    '<div class="quiz-q" onclick="this.parentElement.classList.toggle(\'open\')">' +
+      '<span class="quiz-num">R' + String(i + 1).padStart(2, '0') + '</span>' +
+      '<span class="quiz-text">' + q + '</span>' +
+      '<span class="quiz-chev">▼</span>' +
+    '</div>' +
+    '<div class="quiz-answer" style="background:var(--green-bg);border-top:1px solid var(--green-border);color:var(--green)">If you can answer this confidently, you understand this concept well enough for Phase 2. If not — go back to the study guide or experiment with the code until it clicks.</div>';
+  readinessList.appendChild(div);
+});
+</script>
+</body>
+</html>
