@@ -53,8 +53,9 @@ const useChatStore = create((set, get) => ({
       const text = chunk.replace(/\\n/g, '\n')
       messages[messages.length - 1] = {
         ...last,
-        content: last.content + text,
+        content: last.content + text+' ',
       }
+      // debugger;
       return { messages }
     })
   },

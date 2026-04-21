@@ -21,7 +21,7 @@ async def stream_chat_response(
         {"role": "system", "content": system_prompt},  # system goes first
         *[{"role": msg.role, "content": msg.content} for msg in messages]
     ]
-
+    
     # Open a streaming connection to Groq
     stream = client.chat.completions.create(
         model=settings.ai_model,
@@ -29,7 +29,7 @@ async def stream_chat_response(
         max_tokens=settings.max_tokens,
         stream=True,   # ← this is what enables token-by-token streaming
     )
-
+    # print(groq_messages)
     # Yield each text chunk as it arrives
     for chunk in stream:
         text = chunk.choices[0].delta.content
@@ -58,3 +58,9 @@ async def get_full_response(
     )
 
     return response.choices[0].message.content
+
+
+async def get_available_models():
+    models = client.models.list()
+    return [m.id for m in models.data]
+        

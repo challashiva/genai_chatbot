@@ -1,11 +1,15 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from app.schemas.chat import ChatRequest, ChatResponse
-from app.services.ai_service import stream_chat_response, get_full_response
+from app.services.ai_service import get_available_models, stream_chat_response, get_full_response
 from app.core.config import settings
+import logging
+import groq
 
 router = APIRouter()
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @router.post("/chat/stream")
 async def chat_stream(request: ChatRequest):
@@ -32,8 +36,10 @@ async def chat_stream(request: ChatRequest):
             if not request.messages:
                 raise Exception("Messages cannot be empty")
 
-            
-            print(len(request.messages))
+            #log the number of messages and total character count at the start of each request
+            total_chars = sum(len(m.content) for m in request.messages)
+            logger.info(f"AI request — messages: {len(request.messages)}, total chars: {total_chars}")
+
             if len(request.messages) > max_message_length:
                 raise Exception("Messages cannot be greater than 2000 characters")
             
@@ -76,5 +82,13 @@ async def chat_simple(request: ChatRequest):
             system_prompt=request.system_prompt,
         )
         return ChatResponse(reply=reply, model=settings.ai_model)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/api/models")
+async def get_models():
+    try:
+        names = await get_available_models()
+        return {"models": names}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

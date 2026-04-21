@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Chatbot — Architecture Roadmap</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #111; }
+
+.wrap { padding: 1rem 0; }
+
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; padding: 1rem 0 0.75rem; }
+.tab { padding: 6px 14px; font-size: 12px; border: 0.5px solid #ccc; border-radius: 8px; cursor: pointer; background: transparent; color: #555; transition: all .15s; }
+.tab.on { background: #eff4ff; color: #2563eb; border-color: #bfcffd; font-weight: 500; }
+.tab:hover:not(.on) { background: #f5f5f5; }
+
+.panel { display: none; }
+.panel.on { display: block; }
+
+h3 { font-size: 15px; font-weight: 500; margin: 1.2rem 0 0.5rem; color: #111; }
+p, li { font-size: 13px; color: #555; line-height: 1.65; }
+ul { padding-left: 18px; margin-bottom: 10px; }
+code { font-family: monospace; font-size: 12px; background: #f5f5f5; padding: 1px 6px; border-radius: 4px; color: #111; border: 0.5px solid #e0e0e0; }
+
+.card { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 10px; }
+.badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; vertical-align: middle; }
+.b-blue { background: #eff4ff; color: #2563eb; border: 0.5px solid #bfcffd; }
+.b-green { background: #f0fdf4; color: #16a34a; border: 0.5px solid #bbf7d0; }
+.b-amber { background: #fffbeb; color: #b45309; border: 0.5px solid #fde68a; }
+.b-purple { background: #faf5ff; color: #7c3aed; border: 0.5px solid #ddd6fe; }
+
+.row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid #f0f0f0; }
+.row:last-child { border-bottom: none; }
+
+.check-box { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid #ccc; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.check-box.done { background: #16a34a; border-color: #16a34a; }
+.check-box.done::after { content: ''; display: block; width: 10px; height: 6px; border-left: 2px solid white; border-bottom: 2px solid white; transform: rotate(-45deg) translateY(-1px); }
+.row-text { flex: 1; font-size: 13px; transition: color .15s; }
+.row-text.done { color: #aaa; text-decoration: line-through; }
+
+.progress-wrap { background: #f0f0f0; border-radius: 4px; height: 5px; margin: 8px 0 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: #16a34a; border-radius: 4px; transition: width .3s; }
+.stat { font-size: 12px; color: #888; }
+
+pre { font-family: monospace; font-size: 12px; background: #f8f8f8; border: 0.5px solid #e0e0e0; border-radius: 8px; padding: 14px; line-height: 1.7; overflow-x: auto; margin: 8px 0; white-space: pre; }
+.kw { color: #7c3aed; } .fn { color: #2563eb; } .st { color: #16a34a; } .cm { color: #aaa; font-style: italic; }
+
+.arch-row { display: flex; align-items: center; justify-content: center; gap: 0; margin: 6px 0; flex-wrap: wrap; }
+.arch-box { border-radius: 8px; padding: 10px 16px; font-size: 12px; font-weight: 500; text-align: center; min-width: 120px; line-height: 1.3; }
+.arch-box small { display: block; font-size: 10px; font-weight: 300; opacity: 0.7; margin-top: 2px; }
+.arch-box.blue { background: #eff4ff; border: 1px solid #bfcffd; color: #1d4ed8; }
+.arch-box.teal { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+.arch-box.amber { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+.arch-box.purple { background: #faf5ff; border: 1px solid #ddd6fe; color: #6d28d9; }
+.arch-box.pink { background: #fdf2f8; border: 1px solid #f5d0e8; color: #9d174d; }
+.arch-box.gray { background: #f9fafb; border: 1px solid #e5e7eb; color: #6b7280; }
+.arch-arrow { font-size: 16px; color: #9ca3af; padding: 0 8px; flex-shrink: 0; }
+.arch-label { font-size: 10px; color: #aaa; text-align: center; margin: 2px 0 4px; font-family: monospace; }
+
+.qa-item { border: 0.5px solid #e0e0e0; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.qa-q { padding: 14px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 10px; background: #fff; transition: background .15s; user-select: none; }
+.qa-q:hover { background: #f9f9f9; }
+.qa-num { font-family: monospace; font-size: 11px; color: #2563eb; background: #eff4ff; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; margin-top: 1px; border: 0.5px solid #bfcffd; }
+.qa-text { font-size: 13px; color: #111; flex: 1; }
+.qa-chev { font-size: 11px; color: #aaa; transition: transform .2s; flex-shrink: 0; margin-top: 3px; }
+.qa-item.open .qa-chev { transform: rotate(180deg); }
+.qa-a { display: none; padding: 12px 16px 16px; font-size: 13px; color: #555; line-height: 1.7; background: #fafafa; border-top: 0.5px solid #f0f0f0; }
+.qa-item.open .qa-a { display: block; }
+
+.phase-pill { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; margin-bottom: 10px; }
+
+.step-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.step-num { min-width: 22px; height: 22px; border-radius: 50%; background: #eff4ff; color: #2563eb; font-size: 11px; font-weight: 500; display: flex; align-items: center; justify-content: center; margin-top: 1px; flex-shrink: 0; }
+.step-content { font-size: 13px; color: #555; line-height: 1.6; }
+.step-content strong { color: #111; font-weight: 500; }
+
+.role-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.role-card { border-radius: 8px; padding: 10px 12px; font-size: 12px; text-align: center; }
+
+.cta-btn { display: inline-block; margin-top: 8px; padding: 6px 14px; font-size: 12px; border: 0.5px solid #e0e0e0; border-radius: 8px; cursor: pointer; background: #fff; color: #111; transition: all .15s; font-family: inherit; }
+.cta-btn:hover { background: #f5f5f5; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+th { background: #f5f5f5; color: #111; font-weight: 500; padding: 8px 12px; text-align: left; border: 0.5px solid #e0e0e0; }
+td { padding: 8px 12px; border: 0.5px solid #e0e0e0; color: #555; }
+tr:hover td { background: #fafafa; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tabs">
+    <div class="tab on" onclick="show('overview')">Overview</div>
+    <div class="tab" onclick="show('architecture')">Architecture</div>
+    <div class="tab" onclick="show('folders')">Folder Structure</div>
+    <div class="tab" onclick="show('phases')">Phase Roadmap</div>
+    <div class="tab" onclick="show('roles')">Role-Based Access</div>
+    <div class="tab" onclick="show('stack')">Tech Stack</div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="panel on" id="panel-overview">
+    <div class="card">
+      <div style="font-size:15px;font-weight:500;margin-bottom:6px">GenAI Chatbot — Full Project Blueprint <span class="badge b-blue">Full Stack</span></div>
+      <p>A multi-role AI chatbot platform with React frontend, Python/FastAPI backend, and GenAI (Groq/Claude) integration. Roles: Admin, User, Customer — each sees different features. Built phase by phase so you learn as you go.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">Core Pillars</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-content"><strong>Frontend</strong> — React + Vite, React Router, Zustand (state), TailwindCSS</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-content"><strong>Backend</strong> — Python FastAPI, JWT auth, SQLite → PostgreSQL</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-content"><strong>GenAI Layer</strong> — Groq SDK, streaming responses, prompt templates per role</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-content"><strong>Auth &amp; Roles</strong> — Login system, JWT tokens, role-based route guards</div></div>
+      <div class="step-row"><div class="step-num">5</div><div class="step-content"><strong>Admin Panel</strong> — User management, usage analytics, model config</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">Tech Overview</div>
+      <table>
+        <tr><th>Technology</th><th>What it does</th><th>Alternative</th></tr>
+        <tr><td><span class="badge b-blue">React</span> + Vite</td><td>JavaScript UI library + fast build tool</td><td>Vue.js, Svelte</td></tr>
+        <tr><td><span class="badge b-blue">FastAPI</span></td><td>Modern Python web framework</td><td>Flask, Django</td></tr>
+        <tr><td><span class="badge b-purple">Groq SDK</span></td><td>Free AI model API</td><td>Anthropic, OpenAI</td></tr>
+        <tr><td>Zustand</td><td>React state management</td><td>Redux, Context API</td></tr>
+        <tr><td>SSE</td><td>Stream AI tokens to browser</td><td>WebSockets</td></tr>
+        <tr><td>Pydantic</td><td>Python data validation</td><td>Marshmallow</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="panel" id="panel-architecture">
+    <div class="card" style="padding:24px">
+      <div style="text-align:center;margin-bottom:20px;font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.08em">Full System Architecture</div>
+      <div class="arch-row">
+        <div class="arch-box blue" style="min-width:320px">🌐 Browser (User's Computer)<small>http://localhost:5173</small></div>
+      </div>
+      <div class="arch-label">React app runs here — Vite serves it during development</div>
+      <div class="arch-row" style="gap:8px">
+        <div class="arch-box blue">App.jsx<small>root component</small></div>
+        <div class="arch-box blue">ChatWindow.jsx<small>UI + input</small></div>
+        <div class="arch-box blue">chatStore.js<small>Zustand state</small></div>
+      </div>
+      <div class="arch-label">↓ useChat() hook calls streamChat() in api/chat.js</div>
+      <div class="arch-row">
+        <div class="arch-box teal">api/chat.js — fetch() POST<small>messages sent as JSON body</small></div>
+      </div>
+      <div class="arch-label">↕ HTTP over localhost — Vite proxy forwards /api → port 8000</div>
+      <div class="arch-row">
+        <div class="arch-box amber" style="min-width:320px">⚡ FastAPI Server — Python<small>http://localhost:8000 | uvicorn app.main:app</small></div>
+      </div>
+      <div class="arch-row" style="gap:8px;margin-top:8px">
+        <div class="arch-box amber">main.py<small>app + CORS setup</small></div>
+        <div class="arch-box amber">api/chat.py<small>route handlers</small></div>
+        <div class="arch-box amber">schemas/chat.py<small>validation</small></div>
+      </div>
+      <div class="arch-label">↓ api/chat.py calls ai_service.py</div>
+      <div class="arch-row">
+        <div class="arch-box purple">services/ai_service.py<small>Groq SDK — stream_chat_response()</small></div>
+      </div>
+      <div class="arch-label">↕ HTTPS to api.groq.com — tokens stream back</div>
+      <div class="arch-row">
+        <div class="arch-box pink">☁️ Groq Cloud API<small>llama-3.1-8b-instant model</small></div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0">
+        <div style="text-align:center;font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Return Path — Streaming Response</div>
+        <div class="arch-row" style="gap:4px;flex-wrap:wrap;justify-content:center">
+          <div class="arch-box pink" style="min-width:90px;font-size:11px">Groq sends<br>token</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box purple" style="min-width:90px;font-size:11px">ai_service<br>yields chunk</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box amber" style="min-width:90px;font-size:11px">chat.py wraps<br>as SSE</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box teal" style="min-width:90px;font-size:11px">api/chat.js<br>reads chunk</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box blue" style="min-width:90px;font-size:11px">Zustand<br>appends text</div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box blue" style="min-width:90px;font-size:11px">React<br>re-renders</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px">Why this architecture?</div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Separation of concerns</strong> — each file does one job. Swap Groq for OpenAI by changing only ai_service.py.</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Streaming first</strong> — SSE is simpler than WebSockets for one-direction AI token delivery.</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Security at the backend</strong> — frontend hides UI, backend enforces auth on every API call.</div></div>
+    </div>
+  </div>
+
+  <!-- FOLDERS -->
+  <div class="panel" id="panel-folders">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:12px">Complete folder structure — Phase 1 through Phase 4</div>
+      <pre style="font-size:12px;line-height:1.8"><span style="color:#2563eb;font-weight:500">my-chatbot/</span>
+├── <span style="color:#2563eb">frontend/</span>                 <span style="color:#aaa"># React + Vite</span>
+│   ├── <span style="color:#2563eb">src/</span>
+│   │   ├── <span style="color:#2563eb">api/</span>              <span style="color:#aaa"># axios calls + streaming fetch</span>
+│   │   │   ├── auth.js           <span style="color:#aaa"># Phase 2</span>
+│   │   │   ├── chat.js           <span style="color:#aaa"># Phase 1 ★</span>
+│   │   │   └── admin.js          <span style="color:#aaa"># Phase 4</span>
+│   │   ├── <span style="color:#2563eb">components/</span>       <span style="color:#aaa"># shared UI pieces</span>
+│   │   │   ├── ChatWindow.jsx    <span style="color:#aaa"># Phase 1 ★</span>
+│   │   │   ├── MessageBubble.jsx <span style="color:#aaa"># Phase 1</span>
+│   │   │   └── TypingIndicator.jsx
+│   │   ├── <span style="color:#2563eb">pages/</span>
+│   │   │   ├── Login.jsx         <span style="color:#aaa"># Phase 2</span>
+│   │   │   ├── Chat.jsx          <span style="color:#aaa"># Phase 2</span>
+│   │   │   └── admin/            <span style="color:#aaa"># Phase 4</span>
+│   │   ├── <span style="color:#2563eb">store/</span>
+│   │   │   ├── authStore.js      <span style="color:#aaa"># Phase 2 ★</span>
+│   │   │   └── chatStore.js      <span style="color:#aaa"># Phase 1 ★</span>
+│   │   ├── <span style="color:#2563eb">hooks/</span>
+│   │   │   ├── useChat.js        <span style="color:#aaa"># Phase 1</span>
+│   │   │   └── useAuth.js        <span style="color:#aaa"># Phase 2</span>
+│   │   └── <span style="color:#2563eb">guards/</span>
+│   │       ├── ProtectedRoute.jsx <span style="color:#aaa"># Phase 2 ★</span>
+│   │       └── RoleGuard.jsx      <span style="color:#aaa"># Phase 3 ★</span>
+│
+├── <span style="color:#2563eb">backend/</span>                  <span style="color:#aaa"># Python FastAPI</span>
+│   └── <span style="color:#2563eb">app/</span>
+│       ├── <span style="color:#2563eb">api/</span>
+│       │   ├── auth.py           <span style="color:#aaa"># Phase 2</span>
+│       │   ├── chat.py           <span style="color:#aaa"># Phase 1 ★</span>
+│       │   └── admin.py          <span style="color:#aaa"># Phase 4</span>
+│       ├── <span style="color:#2563eb">core/</span>
+│       │   ├── config.py         <span style="color:#aaa"># Phase 1</span>
+│       │   ├── database.py       <span style="color:#aaa"># Phase 2</span>
+│       │   ├── security.py       <span style="color:#aaa"># Phase 2 ★</span>
+│       │   └── dependencies.py   <span style="color:#aaa"># Phase 2 ★</span>
+│       ├── <span style="color:#2563eb">models/</span>
+│       │   └── user.py           <span style="color:#aaa"># Phase 2</span>
+│       ├── <span style="color:#2563eb">services/</span>
+│       │   ├── ai_service.py     <span style="color:#aaa"># Phase 1 ★</span>
+│       │   └── auth_service.py   <span style="color:#aaa"># Phase 2</span>
+│       ├── <span style="color:#2563eb">schemas/</span>
+│       │   ├── chat.py           <span style="color:#aaa"># Phase 1</span>
+│       │   └── auth.py           <span style="color:#aaa"># Phase 2</span>
+│       └── main.py               <span style="color:#aaa"># Phase 1 entry point</span>
+│
+└── docker-compose.yml             <span style="color:#aaa"># Phase 4</span></pre>
+    </div>
+  </div>
+
+  <!-- PHASES -->
+  <div class="panel" id="panel-phases">
+    <div class="card">
+      <div><span class="phase-pill" style="background:#eff4ff;color:#2563eb">Phase 1</span> <strong>Basic Chatbot — No Auth</strong></div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-content">React app with ChatWindow + input box</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-content">FastAPI <code>/chat</code> endpoint calls Groq</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-content">Streaming response with SSE (words appear one by one)</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-content">Store conversation in Zustand</div></div>
+      <button class="cta-btn" onclick="sendPrompt && sendPrompt('Give me Phase 1 starter code for the GenAI chatbot')">Get Phase 1 code ↗</button>
+    </div>
+
+    <div class="card">
+      <div><span class="phase-pill" style="background:#f0fdf4;color:#15803d">Phase 2</span> <strong>Auth — Login + JWT + Roles</strong></div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-content">Login page, register API, JWT token generation</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-content">User model with role field: admin / user / customer</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-content">React ProtectedRoute — redirect to login if no token</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-content">Backend <code>get_current_user</code> dependency validates JWT on every request</div></div>
+      <button class="cta-btn" onclick="sendPrompt && sendPrompt('Give me Phase 2 JWT login code with FastAPI and React ProtectedRoute')">Get Phase 2 code ↗</button>
+    </div>
+
+    <div class="card">
+      <div><span class="phase-pill" style="background:#fffbeb;color:#92400e">Phase 3</span> <strong>Role-Based Features</strong></div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-content">RoleGuard component — show/hide UI by role</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-content">Admin: model selector, system prompt editor, all users</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-content">User: standard chat + own history</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-content">Customer: scoped chatbot, limited topics, support only</div></div>
+      <button class="cta-btn" onclick="sendPrompt && sendPrompt('Give me Phase 3 RoleGuard component and role-scoped FastAPI dependencies')">Get Phase 3 code ↗</button>
+    </div>
+
+    <div class="card">
+      <div><span class="phase-pill" style="background:#faf5ff;color:#6d28d9">Phase 4</span> <strong>Admin Dashboard + Analytics</strong></div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-content">Admin panel: list/edit/delete users, change roles</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-content">Usage stats: messages per user, tokens used, active sessions</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-content">PostgreSQL migration from SQLite, Alembic migrations</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-content">Docker Compose to run everything together</div></div>
+      <button class="cta-btn" onclick="sendPrompt && sendPrompt('Give me Phase 4 Admin dashboard, user management API and Docker Compose config')">Get Phase 4 code ↗</button>
+    </div>
+  </div>
+
+  <!-- ROLES -->
+  <div class="panel" id="panel-roles">
+    <div class="role-grid" style="margin-bottom:12px">
+      <div class="role-card" style="background:#eff4ff;border:0.5px solid #bfcffd">
+        <div style="font-size:13px;font-weight:500;color:#1d4ed8;margin-bottom:6px">👤 Admin</div>
+        <div style="font-size:11px;color:#2563eb;line-height:1.8">Full chat access<br>User management<br>Model config<br>Usage analytics<br>System prompts<br>All conversations</div>
+      </div>
+      <div class="role-card" style="background:#f0fdf4;border:0.5px solid #bbf7d0">
+        <div style="font-size:13px;font-weight:500;color:#15803d;margin-bottom:6px">👤 User</div>
+        <div style="font-size:11px;color:#16a34a;line-height:1.8">Standard chat<br>Own history only<br>Profile settings<br>—<br>—<br>—</div>
+      </div>
+      <div class="role-card" style="background:#fffbeb;border:0.5px solid #fde68a">
+        <div style="font-size:13px;font-weight:500;color:#92400e;margin-bottom:6px">👤 Customer</div>
+        <div style="font-size:11px;color:#b45309;line-height:1.8">Support chat only<br>Limited topics<br>FAQ bot mode<br>—<br>—<br>—</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">How role enforcement works in code</div>
+      <pre><span class="cm"># Backend: FastAPI role dependency</span>
+<span class="kw">def</span> <span class="fn">require_role</span>(required: str):
+    <span class="kw">def</span> <span class="fn">checker</span>(user = Depends(get_current_user)):
+        <span class="kw">if</span> user.role != required:
+            <span class="kw">raise</span> HTTPException(<span style="color:#e55">403</span>, <span class="st">"Forbidden"</span>)
+        <span class="kw">return</span> user
+    <span class="kw">return</span> checker
+
+<span class="cm"># Usage on admin-only route:</span>
+@router.get(<span class="st">"/admin/users"</span>)
+<span class="kw">async def</span> <span class="fn">get_users</span>(admin = Depends(require_role(<span class="st">"admin"</span>))):
+    ...</pre>
+      <pre><span class="cm">// Frontend: RoleGuard component</span>
+<span class="kw">const</span> <span class="fn">RoleGuard</span> = ({ role, children }) => {
+  <span class="kw">const</span> { user } = <span class="fn">useAuthStore</span>()
+  <span class="kw">if</span> (user?.role !== role) <span class="kw">return null</span>
+  <span class="kw">return</span> children
+}
+<span class="cm">// Usage in JSX:</span>
+&lt;RoleGuard role=<span class="st">"admin"</span>&gt;
+  &lt;AdminPanel /&gt;
+&lt;/RoleGuard&gt;</pre>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <div class="panel" id="panel-stack">
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">Frontend <span class="badge b-blue">React</span></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Vite</strong> — fast dev server, replaces Create React App</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>React Router v6</strong> — page routing, nested routes, protected routes</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Zustand</strong> — simpler than Redux, stores auth + chat state globally</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Axios</strong> — HTTP client with interceptors for JWT header injection</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">Backend <span class="badge b-green">Python</span></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>FastAPI</strong> — async, auto OpenAPI docs, great for streaming + Depends injection</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>SQLAlchemy</strong> — ORM for DB models (SQLite in dev, PostgreSQL in prod)</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>python-jose</strong> — JWT creation and verification (HS256 algorithm)</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>passlib[bcrypt]</strong> — secure one-way password hashing</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:10px">GenAI <span class="badge b-purple">AI Layer</span></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>Groq SDK</strong> — free tier, llama-3.1-8b-instant model, fast streaming</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>System prompts per role</strong> — admin gets full access, customer gets scoped bot</div></div>
+      <div class="step-row"><div class="step-num">→</div><div class="step-content"><strong>SSE streaming</strong> — tokens flow browser-side word by word via ReadableStream</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px">Install commands</div>
+      <pre><span class="cm"># Frontend</span>
+npm create vite@latest frontend -- --template react
+cd frontend && npm install react-router-dom zustand axios
+
+<span class="cm"># Backend</span>
+pip install fastapi uvicorn groq sqlalchemy
+pip install python-jose passlib python-multipart
+pip install pydantic-settings python-dotenv</pre>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('panel-' + id).classList.add('on');
+  event.target.classList.add('on');
+}
+</script>
+</body>
+</html>
