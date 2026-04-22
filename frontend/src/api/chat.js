@@ -30,7 +30,7 @@ export async function streamChat({
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages, system_prompt: systemPrompt }),
     })
-    debugger;
+    // debugger;
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`)
     }
@@ -68,6 +68,7 @@ export async function streamChat({
 
         // Regular text chunk — send to the store
         if (data) {
+          // console.log('chunk:', data)
           onChunk(data)
         }
       }

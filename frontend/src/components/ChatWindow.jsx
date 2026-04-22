@@ -13,6 +13,8 @@ import { TypingIndicator } from './TypingIndicator'
  * - Handle user input (textarea + send button)
  * - Auto-scroll to bottom as new tokens stream in
  */
+const MAX_CHARS = 2000;
+const WARN_THRESHOLD = 1800;
 export function ChatWindow() {
   const [inputText, setInputText] = useState('')
   const messagesEndRef = useRef(null)   // for auto-scrolling
@@ -149,64 +151,70 @@ export function ChatWindow() {
 
       {/* ── Input Area ── */}
       <div style={{
-        padding: '16px 20px',
         borderTop: '1px solid #e5e7eb',
         background: '#fff',
+        padding: '16px 20px',
+      }}>
+        <p style={{ color: inputText.length > WARN_THRESHOLD ? "red" : "gray" }}>
+        {inputText.length} / {MAX_CHARS}
+        </p>
+        <div style={{
         display: 'flex',
         gap: '10px',
-        alignItems: 'flex-end',
+        alignItems: 'center',
       }}>
-        <textarea
-          ref={textareaRef}
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Type a message... (Enter to send, Shift+Enter for new line)"
-          disabled={isLoading}
-          rows={1}
-          style={{
-            flex: 1,
-            resize: 'none',
-            border: '1px solid #e5e7eb',
-            borderRadius: '12px',
-            padding: '12px 16px',
-            fontSize: '15px',
-            fontFamily: 'inherit',
-            outline: 'none',
-            lineHeight: '1.5',
-            maxHeight: '120px',
-            overflowY: 'auto',
-            background: isLoading ? '#f9fafb' : '#fff',
-            color: '#111',
-            transition: 'border-color 0.15s',
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#667eea'}
-          onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
-        />
+          <textarea
+            ref={textareaRef}
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Type a message... (Enter to send, Shift+Enter for new line)"
+            disabled={isLoading}
+            rows={1}
+            style={{
+              flex: 1,
+              resize: 'none',
+              border: '1px solid #e5e7eb',
+              borderRadius: '12px',
+              padding: '12px 16px',
+              fontSize: '15px',
+              fontFamily: 'inherit',
+              outline: 'none',
+              lineHeight: '1.5',
+              maxHeight: '120px',
+              overflowY: 'auto',
+              background: isLoading ? '#f9fafb' : '#fff',
+              color: '#111',
+              transition: 'border-color 0.15s',
+            }}
+            onFocus={(e) => e.target.style.borderColor = '#667eea'}
+            onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+          />
 
-        <button
-          onClick={handleSend}
-          disabled={isLoading || !inputText.trim()}
-          style={{
-            width: '44px',
-            height: '44px',
-            borderRadius: '12px',
-            border: 'none',
-            background: isLoading || !inputText.trim()
-              ? '#e5e7eb'
-              : 'linear-gradient(135deg, #667eea, #764ba2)',
-            color: '#fff',
-            fontSize: '18px',
-            cursor: isLoading || !inputText.trim() ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            transition: 'all 0.15s',
-          }}
-        >
-          {isLoading ? '⏳' : '➤'}
-        </button>
+          <button
+            onClick={handleSend}
+            disabled={isLoading || !inputText.trim()}
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              border: 'none',
+              background: isLoading || !inputText.trim()
+                ? '#e5e7eb'
+                : 'linear-gradient(135deg, #667eea, #764ba2)',
+              color: '#fff',
+              fontSize: '18px',
+              cursor: isLoading || !inputText.trim() ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              transition: 'all 0.15s',
+            }}
+          >
+            {isLoading ? '⏳' : '➤'}
+          </button>
+          </div>
       </div>
     </div>
   )
