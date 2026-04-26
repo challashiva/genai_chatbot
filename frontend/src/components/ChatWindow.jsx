@@ -33,7 +33,13 @@ export function ChatWindow() {
     const text = inputText.trim()
     if (!text || isLoading) return
 
-    setInputText('')          // clear the input immediately
+    setInputText('')      
+    // clear the input immediately
+    //reset height after clearing the input
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+    }
+
     await sendMessage(text)   // this triggers the streaming
   }
 
@@ -166,11 +172,17 @@ export function ChatWindow() {
           <textarea
             ref={textareaRef}
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => {
+              setInputText(e.target.value)
+              // Reset to auto first so it can SHRINK when text is deleted
+              e.target.style.height = 'auto'
+              // Then set to content height, capped at 6 rows (6 × 24px line-height = 144px)
+              e.target.style.height = Math.min(e.target.scrollHeight, 144) + 'px'
+            }}
             onKeyDown={handleKeyDown}
             placeholder="Type a message... (Enter to send, Shift+Enter for new line)"
             disabled={isLoading}
-            rows={1}
+            //rows={1}
             style={{
               flex: 1,
               resize: 'none',

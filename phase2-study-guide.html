@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase 2 — Study Guide & Practice Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0e14;
+  --surface: #13151f;
+  --surface2: #1a1d2a;
+  --surface3: #21253a;
+  --border: #252a3d;
+  --border2: #2e3450;
+  --text: #c8cde0;
+  --text2: #7b82a0;
+  --text3: #4a5070;
+  --bright: #eef0f8;
+  --accent: #4f8ef7;
+  --accent-bg: rgba(79,142,247,0.1);
+  --accent-border: rgba(79,142,247,0.3);
+  --green: #3ecf8e;
+  --green-bg: rgba(62,207,142,0.08);
+  --green-border: rgba(62,207,142,0.25);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.08);
+  --amber-border: rgba(245,158,11,0.25);
+  --red: #f87171;
+  --red-bg: rgba(248,113,113,0.08);
+  --red-border: rgba(248,113,113,0.25);
+  --purple: #a78bfa;
+  --purple-bg: rgba(167,139,250,0.08);
+  --purple-border: rgba(167,139,250,0.25);
+  --mono: 'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;line-height:1.65}
+
+/* ── Layout ── */
+.layout{display:grid;grid-template-columns:255px 1fr;min-height:100vh}
+
+/* ── Sidebar ── */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.brand{padding:26px 20px 18px;border-bottom:1px solid var(--border)}
+.brand-eye{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px}
+.brand-name{font-family:'Instrument Serif',serif;font-size:20px;color:var(--bright);line-height:1.2}
+.brand-name em{font-style:italic;color:var(--accent)}
+
+.nav-group{padding:14px 0 6px;border-bottom:1px solid var(--border)}
+.nav-label{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);padding:0 20px 7px;font-family:var(--mono)}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 20px;font-size:13px;color:var(--text2);cursor:pointer;border-left:2px solid transparent;transition:all .15s;user-select:none}
+.nav-item:hover{color:var(--bright);background:var(--surface2)}
+.nav-item.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-bg)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+.sidebar-progress{margin-top:auto;padding:18px 20px;border-top:1px solid var(--border)}
+.sp-label{font-size:11px;color:var(--text3);margin-bottom:5px;display:flex;justify-content:space-between}
+.sp-track{height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
+.sp-fill{height:100%;background:var(--green);border-radius:2px;transition:width .4s}
+
+/* ── Main ── */
+.main{padding:44px 56px;max-width:960px}
+.section{display:none;animation:fadeUp .2s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Typography ── */
+.page-h{font-family:'Instrument Serif',serif;font-size:36px;color:var(--bright);line-height:1.15;margin-bottom:8px}
+.page-h em{font-style:italic;color:var(--accent)}
+.page-sub{font-size:14px;color:var(--text2);margin-bottom:32px;font-weight:300;max-width:560px}
+h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--bright);margin:40px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+h3{font-size:14px;font-weight:500;color:var(--bright);margin:20px 0 8px}
+p{color:var(--text);font-size:14px;margin-bottom:12px}
+code{font-family:var(--mono);font-size:12px;background:var(--surface2);border:1px solid var(--border2);padding:1px 6px;border-radius:4px;color:var(--accent)}
+ul{padding-left:20px;margin-bottom:12px}
+li{font-size:13.5px;color:var(--text);line-height:1.7}
+strong{color:var(--bright);font-weight:500}
+
+/* ── Badges ── */
+.badge{font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;letter-spacing:.04em;display:inline-block;vertical-align:middle}
+.b-blue{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border)}
+.b-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.b-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.b-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.b-purple{background:var(--purple-bg);color:var(--purple);border:1px solid var(--purple-border)}
+
+/* ── Callouts ── */
+.callout{border-radius:8px;padding:14px 18px;margin:16px 0;border-left:3px solid;font-size:13.5px;line-height:1.65}
+.callout-info{background:var(--accent-bg);border-color:var(--accent);color:var(--text)}
+.callout-tip{background:var(--green-bg);border-color:var(--green);color:var(--text)}
+.callout-warn{background:var(--amber-bg);border-color:var(--amber);color:var(--text)}
+.callout-danger{background:var(--red-bg);border-color:var(--red);color:var(--text)}
+.callout-title{font-weight:500;margin-bottom:5px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)}
+.callout-info .callout-title{color:var(--accent)}
+.callout-tip .callout-title{color:var(--green)}
+.callout-warn .callout-title{color:var(--amber)}
+.callout-danger .callout-title{color:var(--red)}
+
+/* ── Code blocks ── */
+.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;margin:14px 0;overflow:hidden}
+.code-header{background:var(--surface2);padding:9px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text2);font-family:var(--mono)}
+.code-header .fname{color:var(--amber);font-weight:500}
+pre{padding:18px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.8;color:#c9d1d9}
+.kw{color:#ff7b72}.fn{color:#79c0ff}.st{color:#a5d6a7}.cm{color:#484f58;font-style:italic}.num{color:#ffa657}.dec{color:#79c0ff}.cls{color:#ffa657}.op{color:#79c0ff}
+
+/* ── Annotated lines ── */
+.annotated{background:#0d1117;border:1px solid var(--border);border-radius:8px;margin:14px 0;overflow:hidden}
+.ann-header{background:var(--surface2);padding:9px 16px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12px;color:var(--amber)}
+.ann-line{border-bottom:1px solid rgba(37,42,61,.6)}
+.ann-line:last-child{border-bottom:none}
+.ann-code{font-family:var(--mono);font-size:12.5px;padding:10px 16px;color:#c9d1d9;background:#0d1117;line-height:1.6}
+.ann-explain{font-size:12.5px;padding:8px 16px 12px;color:var(--text2);background:rgba(13,17,23,.5);border-top:1px dashed var(--border);line-height:1.6}
+.ann-explain strong{color:var(--green)}
+.ann-explain .alt{color:var(--amber)}
+
+/* ── Pipeline ── */
+.pipeline{display:flex;flex-direction:column;gap:0;margin:24px 0;position:relative}
+.pipeline::before{content:'';position:absolute;left:21px;top:42px;bottom:42px;width:1px;background:linear-gradient(to bottom,var(--accent),var(--green));opacity:.3}
+.pipe-step{display:flex;gap:18px;align-items:flex-start;padding:14px 0;position:relative}
+.pipe-num{width:44px;height:44px;border-radius:50%;background:var(--surface2);border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--accent);flex-shrink:0;z-index:1}
+.pipe-content{flex:1;padding-top:9px}
+.pipe-title{font-weight:500;color:var(--bright);font-size:14px;margin-bottom:3px}
+.pipe-desc{font-size:13px;color:var(--text2);line-height:1.6}
+.pipe-code{font-family:var(--mono);font-size:11.5px;color:var(--green);background:var(--green-bg);padding:2px 8px;border-radius:4px;margin-top:5px;display:inline-block;border:1px solid var(--green-border)}
+
+/* ── Checklist ── */
+.check-group{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.check-group-hdr{padding:12px 18px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.check-group-title{font-family:var(--mono);font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.check-row{display:flex;align-items:flex-start;gap:12px;padding:12px 18px;border-bottom:1px solid rgba(37,42,61,.5);transition:background .1s;cursor:default}
+.check-row:last-child{border-bottom:none}
+.check-row:hover{background:rgba(255,255,255,.02)}
+.chk{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);cursor:pointer;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:transparent}
+.chk:hover{border-color:var(--accent)}
+.chk.done{background:var(--green);border-color:var(--green)}
+.chk.done::after{content:'';display:block;width:11px;height:6px;border-left:2px solid #0c0e14;border-bottom:2px solid #0c0e14;transform:rotate(-45deg) translateY(-1px)}
+.chk-text{font-size:13.5px;color:var(--text);line-height:1.55;flex:1;transition:all .15s}
+.chk-text.done{color:var(--text3);text-decoration:line-through}
+
+/* ── Progress bar ── */
+.prog-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:16px}
+.prog-emoji{font-size:28px;flex-shrink:0}
+.prog-info{flex:1}
+.prog-nums{font-family:var(--mono);font-size:11px;color:var(--text2);margin-bottom:6px;display:flex;justify-content:space-between}
+.prog-track{height:5px;background:var(--border2);border-radius:3px;overflow:hidden}
+.prog-bar{height:100%;background:var(--green);border-radius:3px;transition:width .4s}
+
+/* ── Debug ── */
+.filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.fbtn{font-family:var(--mono);font-size:11px;padding:5px 12px;border:1px solid var(--border2);border-radius:6px;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.04em}
+.fbtn:hover{border-color:var(--accent);color:var(--accent)}
+.fbtn.active{background:var(--accent);color:#0c0e14;border-color:var(--accent)}
+.err-card{border:1px solid var(--red-border);border-radius:10px;margin-bottom:11px;overflow:hidden;background:var(--surface)}
+.err-head{padding:12px 16px;background:var(--red-bg);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
+.err-head:hover{background:rgba(248,113,113,.12)}
+.err-title{font-size:13px;font-weight:500;color:var(--red);display:flex;align-items:center;gap:8px}
+.err-chev{font-size:11px;color:var(--red);transition:transform .2s}
+.err-card.open .err-chev{transform:rotate(180deg)}
+.err-body{display:none;padding:14px 16px;border-top:1px solid var(--red-border)}
+.err-card.open .err-body{display:block}
+.err-desc{font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.65}
+.fix-box{background:var(--green-bg);border:1px solid var(--green-border);border-radius:8px;padding:12px 14px}
+.fix-title{font-family:var(--mono);font-size:10px;color:var(--green);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.fix-text{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* ── Exercises ── */
+.ex-card{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;background:var(--surface)}
+.ex-head{padding:14px 18px;background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none}
+.ex-head:hover{background:var(--surface3)}
+.ex-left{display:flex;align-items:center;gap:10px}
+.ex-num{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.ex-title{font-size:14px;font-weight:500;color:var(--bright)}
+.ex-chev{font-size:11px;color:var(--text3);transition:transform .2s}
+.ex-card.open .ex-chev{transform:rotate(180deg)}
+.ex-body{display:none;padding:16px 18px;border-top:1px solid var(--border)}
+.ex-card.open .ex-body{display:block}
+.ex-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.meta-box{background:var(--surface2);border-radius:8px;padding:10px 12px}
+.meta-lbl{font-family:var(--mono);font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
+.meta-val{font-size:12.5px;color:var(--text);line-height:1.5}
+.hint-btn{font-family:var(--mono);font-size:11px;padding:5px 12px;border:1px solid var(--amber-border);border-radius:6px;background:var(--amber-bg);color:var(--amber);cursor:pointer;margin-top:10px;transition:all .15s}
+.hint-btn:hover{background:rgba(245,158,11,.15)}
+.hint-box{display:none;margin-top:10px;padding:12px 14px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:8px;font-size:13px;color:var(--text2);line-height:1.65}
+
+/* ── Q&A ── */
+.qa-item{border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;background:var(--surface)}
+.qa-q{padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:12px;transition:background .15s;user-select:none}
+.qa-q:hover{background:var(--surface2)}
+.qa-num{font-family:var(--mono);font-size:10px;background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:2px}
+.qa-text{font-size:13.5px;color:var(--bright);flex:1;line-height:1.5}
+.qa-chev{font-size:11px;color:var(--text3);transition:transform .2s;flex-shrink:0;margin-top:3px}
+.qa-item.open .qa-chev{transform:rotate(180deg)}
+.qa-ans{display:none;padding:14px 18px 16px;border-top:1px solid var(--border);background:var(--surface2);font-size:13.5px;color:var(--text2);line-height:1.7}
+.qa-item.open .qa-ans{display:block}
+
+/* ── Glossary ── */
+.gloss-item{padding:13px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:start}
+.gloss-term{font-family:var(--mono);font-size:12.5px;color:var(--amber);font-weight:500}
+.gloss-def{font-size:13.5px;color:var(--text2);line-height:1.65}
+
+/* ── Tables ── */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th{background:var(--surface2);color:var(--bright);font-weight:500;padding:10px 14px;text-align:left;border:1px solid var(--border)}
+td{padding:10px 14px;border:1px solid var(--border);color:var(--text2);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.02)}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{position:static;height:auto}.main{padding:24px 20px}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<nav class="sidebar">
+  <div class="brand">
+    <div class="brand-eye">Phase 2 · Study Guide</div>
+    <div class="brand-name">JWT Auth &<br><em>Roles</em></div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Study Guide</div>
+    <div class="nav-item active" onclick="go('overview',this)"><div class="nav-dot" style="background:#4f8ef7"></div>Overview</div>
+    <div class="nav-item" onclick="go('auth-flow',this)"><div class="nav-dot" style="background:#3ecf8e"></div>Auth flow pipeline</div>
+    <div class="nav-item" onclick="go('security',this)"><div class="nav-dot" style="background:#a78bfa"></div>security.py ★</div>
+    <div class="nav-item" onclick="go('database',this)"><div class="nav-dot" style="background:#f59e0b"></div>database.py</div>
+    <div class="nav-item" onclick="go('user-model',this)"><div class="nav-dot" style="background:#f59e0b"></div>models/user.py</div>
+    <div class="nav-item" onclick="go('dependencies',this)"><div class="nav-dot" style="background:#a78bfa"></div>dependencies.py ★</div>
+    <div class="nav-item" onclick="go('auth-service',this)"><div class="nav-dot" style="background:#3ecf8e"></div>auth_service.py ★</div>
+    <div class="nav-item" onclick="go('api-auth',this)"><div class="nav-dot" style="background:#3ecf8e"></div>api/auth.py</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Frontend</div>
+    <div class="nav-item" onclick="go('auth-store',this)"><div class="nav-dot" style="background:#4f8ef7"></div>authStore.js ★</div>
+    <div class="nav-item" onclick="go('api-auth-js',this)"><div class="nav-dot" style="background:#4f8ef7"></div>api/auth.js ★</div>
+    <div class="nav-item" onclick="go('protected-route',this)"><div class="nav-dot" style="background:#a78bfa"></div>ProtectedRoute.jsx ★</div>
+    <div class="nav-item" onclick="go('role-guard',this)"><div class="nav-dot" style="background:#a78bfa"></div>RoleGuard.jsx</div>
+    <div class="nav-item" onclick="go('use-auth',this)"><div class="nav-dot" style="background:#4f8ef7"></div>useAuth.js</div>
+    <div class="nav-item" onclick="go('login-page',this)"><div class="nav-dot" style="background:#4f8ef7"></div>Login.jsx & App.jsx</div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Practice Lab</div>
+    <div class="nav-item" onclick="go('checklist',this)"><div class="nav-dot" style="background:#3ecf8e"></div>Improvement checklist</div>
+    <div class="nav-item" onclick="go('debug',this)"><div class="nav-dot" style="background:#f87171"></div>Debug guide</div>
+    <div class="nav-item" onclick="go('exercises',this)"><div class="nav-dot" style="background:#4f8ef7"></div>Coding exercises</div>
+    <div class="nav-item" onclick="go('quiz',this)"><div class="nav-dot" style="background:#a78bfa"></div>Self-test quiz</div>
+    <div class="nav-item" onclick="go('glossary',this)"><div class="nav-dot" style="background:#f59e0b"></div>Glossary</div>
+  </div>
+
+  <div class="sidebar-progress">
+    <div class="sp-label"><span>Checklist</span><span id="sp-pct">0%</span></div>
+    <div class="sp-track"><div class="sp-fill" id="sp-bar" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main">
+
+<!-- ─── OVERVIEW ─── -->
+<section class="section active" id="sec-overview">
+  <div class="page-h">Phase 2<br><em>Study Guide</em></div>
+  <div class="page-sub">JWT authentication, bcrypt passwords, SQLAlchemy, React Router, and role-based access — explained line by line.</div>
+
+  <div class="callout callout-info">
+    <div class="callout-title">What Phase 2 adds on top of Phase 1</div>
+    Phase 1 was a stateless chatbot — anyone could use it. Phase 2 adds identity: users register, log in, receive a signed token, and that token gates every API call. The streaming chat logic is completely unchanged — we just wrap a security layer around it.
+  </div>
+
+  <h2>What's new</h2>
+  <table>
+    <tr><th>File</th><th>What it does</th><th>New concept</th></tr>
+    <tr><td><code>security.py</code></td><td>Hash passwords, create/verify JWT tokens</td><td>bcrypt, JWT</td></tr>
+    <tr><td><code>database.py</code></td><td>SQLAlchemy engine, session factory, Base</td><td>ORM, sessions</td></tr>
+    <tr><td><code>models/user.py</code></td><td>User table with role column</td><td>SQLAlchemy model</td></tr>
+    <tr><td><code>dependencies.py</code></td><td>FastAPI auth dependencies</td><td>Depends(), guards</td></tr>
+    <tr><td><code>auth_service.py</code></td><td>Register and login business logic</td><td>Service layer</td></tr>
+    <tr><td><code>api/auth.py</code></td><td>Register, login, /me HTTP routes</td><td>Auth endpoints</td></tr>
+    <tr><td><code>authStore.js</code></td><td>Zustand store with localStorage persistence</td><td>Token storage</td></tr>
+    <tr><td><code>api/auth.js</code></td><td>Axios instance + request/response interceptors</td><td>Interceptors</td></tr>
+    <tr><td><code>ProtectedRoute.jsx</code></td><td>Redirects to /login if no token</td><td>Route guards</td></tr>
+    <tr><td><code>RoleGuard.jsx</code></td><td>Shows/hides UI by role</td><td>Conditional render</td></tr>
+    <tr><td><code>useAuth.js</code></td><td>Login/register/logout actions</td><td>Custom hook</td></tr>
+    <tr><td><code>Login.jsx</code></td><td>Login + register form page</td><td>Controlled forms</td></tr>
+    <tr><td><code>App.jsx</code></td><td>React Router with protected routes</td><td>BrowserRouter</td></tr>
+  </table>
+
+  <h2>Phase 1 files that are unchanged</h2>
+  <div class="callout callout-tip">
+    <div class="callout-title">Good news</div>
+    <code>ai_service.py</code>, <code>schemas/chat.py</code>, <code>chatStore.js</code>, <code>ChatWindow.jsx</code>, <code>MessageBubble.jsx</code>, <code>TypingIndicator.jsx</code>, <code>useChat.js</code> — all survive Phase 2 completely untouched. Only <code>api/chat.py</code> and <code>api/chat.js</code> get small additions (auth token attachment).
+  </div>
+
+  <h2>The three big new concepts</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px">
+    <div class="callout callout-info" style="margin:0">
+      <div class="callout-title">JWT</div>
+      A signed string the server gives after login. The client sends it with every request. No database lookup needed to verify — just check the signature.
+    </div>
+    <div class="callout callout-tip" style="margin:0">
+      <div class="callout-title">bcrypt</div>
+      A one-way password hash. You can never recover the original — only verify a guess. Intentionally slow to defeat brute-force attacks.
+    </div>
+    <div style="background:var(--purple-bg);border:var(--purple-border) 1px solid;border-left:3px solid var(--purple);border-radius:8px;padding:14px 18px">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--purple);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">SQLAlchemy ORM</div>
+      <div style="font-size:13.5px;color:var(--text);line-height:1.65">Maps Python classes to database tables. Write Python, not SQL. Handles inserts, queries, and updates automatically.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AUTH FLOW PIPELINE ─── -->
+<section class="section" id="sec-auth-flow">
+  <div class="page-h">Auth Flow <em>Pipeline</em></div>
+  <div class="page-sub">Every step from submitting the login form to an authenticated AI chat request.</div>
+
+  <h2>Registration flow</h2>
+  <div class="pipeline">
+    <div class="pipe-step"><div class="pipe-num">1</div><div class="pipe-content"><div class="pipe-title">User fills in email + password in Login.jsx</div><div class="pipe-desc">React local state tracks the form fields. On submit, <code>e.preventDefault()</code> stops the browser reload, then <code>handleRegister(email, password)</code> from <code>useAuth</code> is called.</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">2</div><div class="pipe-content"><div class="pipe-title">useAuth calls register() in api/auth.js</div><div class="pipe-desc"><code>axios.post('/api/auth/register', { email, password })</code> is sent. Axios uses the shared <code>apiClient</code> instance which has the base URL and interceptors already configured.</div><div class="pipe-code">POST /api/auth/register → { email, password, full_name }</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">3</div><div class="pipe-content"><div class="pipe-title">FastAPI validates the request with Pydantic</div><div class="pipe-desc"><code>RegisterRequest</code> schema checks: is email valid? Is password at least 8 chars? The <code>@field_validator</code> runs automatically. If validation fails, a 422 error is returned before our code even runs.</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">4</div><div class="pipe-content"><div class="pipe-title">auth_service.register_user() checks for duplicates</div><div class="pipe-desc">Queries the database for an existing user with this email. If found, raises <code>HTTPException(400)</code>. If not, hashes the password with bcrypt and creates a new User record.</div><div class="pipe-code">db.query(User).filter(User.email == email).first()</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">5</div><div class="pipe-content"><div class="pipe-title">User is saved to SQLite, response returned</div><div class="pipe-desc"><code>db.add(user)</code> → <code>db.commit()</code> → <code>db.refresh(user)</code>. The UserResponse schema strips out <code>hashed_password</code> before serialising — only safe fields go back to the client.</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">6</div><div class="pipe-content"><div class="pipe-title">useAuth auto-logs in after registration</div><div class="pipe-desc">After register succeeds, <code>handleRegister</code> immediately calls <code>login(email, password)</code> so the user doesn't have to submit the form twice.</div></div></div>
+  </div>
+
+  <h2>Login flow</h2>
+  <div class="pipeline">
+    <div class="pipe-step"><div class="pipe-num">1</div><div class="pipe-content"><div class="pipe-title">POST /api/auth/login with email + password</div><div class="pipe-desc">FastAPI validates the <code>LoginRequest</code> schema. The route handler calls <code>login_user(request, db)</code> from auth_service.</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">2</div><div class="pipe-content"><div class="pipe-title">auth_service fetches user and verifies password</div><div class="pipe-desc"><code>db.query(User).filter(User.email == email).first()</code> finds the user. <code>verify_password(plain, hashed)</code> runs bcrypt comparison. Both wrong-email and wrong-password return the same 401 error — preventing email enumeration attacks.</div><div class="pipe-code">verify_password("mypass", "$2b$12$...") → True/False</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">3</div><div class="pipe-content"><div class="pipe-title">JWT token is created and returned</div><div class="pipe-desc"><code>create_access_token({ "sub": str(user.id), "role": user.role })</code> signs the payload with the secret key. The token string is returned along with the role (so React doesn't need to decode the JWT).</div><div class="pipe-code">→ { access_token: "eyJ...", role: "admin", user_id: 1 }</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">4</div><div class="pipe-content"><div class="pipe-title">React stores token in Zustand + localStorage</div><div class="pipe-desc"><code>setAuth(token, user)</code> in authStore saves to both. localStorage means the token survives a browser refresh — without it, the user would be logged out every time they reload the page.</div><div class="pipe-code">localStorage.setItem('auth_token', token)</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">5</div><div class="pipe-content"><div class="pipe-title">React Router navigates to /chat</div><div class="pipe-desc"><code>navigate(from, { replace: true })</code> redirects to the original destination. If the user went directly to <code>/chat</code> before logging in, they land back there. Otherwise they go to <code>/chat</code> by default.</div></div></div>
+  </div>
+
+  <h2>Authenticated request flow (chat)</h2>
+  <div class="pipeline">
+    <div class="pipe-step"><div class="pipe-num">1</div><div class="pipe-content"><div class="pipe-title">User sends a chat message</div><div class="pipe-desc">Same as Phase 1 — <code>sendMessage()</code> in useChat is called. The only difference: <code>api/chat.js</code> now reads the token from authStore and adds it to the fetch header.</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">2</div><div class="pipe-content"><div class="pipe-title">fetch() includes Authorization header</div><div class="pipe-desc"><code>Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...</code> is added to every streaming fetch request. FastAPI reads this header via the <code>HTTPBearer</code> scheme.</div><div class="pipe-code">headers: { 'Authorization': `Bearer ${token}` }</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">3</div><div class="pipe-content"><div class="pipe-title">FastAPI's get_current_user() dependency runs</div><div class="pipe-desc">The dependency chain: <code>HTTPBearer</code> extracts the token string → <code>decode_access_token()</code> verifies the JWT signature and expiry → <code>db.query(User).filter(User.id == id).first()</code> fetches the user record. If any step fails, 401 is raised before the route handler runs.</div></div></div>
+    <div class="pipe-step"><div class="pipe-num">4</div><div class="pipe-content"><div class="pipe-title">Route handler receives the User object</div><div class="pipe-desc">The User's role determines which system prompt the AI gets. Admin sees full capability, customer sees restricted support bot — no extra API calls needed, it's all in the token.</div><div class="pipe-code">system_prompt = SYSTEM_PROMPTS[current_user.role]</div></div></div>
+  </div>
+</section>
+
+<!-- ─── SECURITY.PY ─── -->
+<section class="section" id="sec-security">
+  <div class="page-h"><em>security.py</em> ★</div>
+  <div class="page-sub">The two pillars of auth security: bcrypt password hashing and JWT token management.</div>
+  <span class="badge b-purple">Python</span> <span class="badge b-blue">JWT</span> <span class="badge b-amber">bcrypt</span>
+
+  <h2>Password hashing with bcrypt</h2>
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠️ Why you must never store plain passwords</div>
+    Databases get leaked. If passwords are stored in plain text, every user's password is exposed. With bcrypt, even if the database is stolen, attackers can't recover passwords — they'd need to guess each one, which takes years per password given bcrypt's intentional slowness.
+  </div>
+
+  <div class="annotated" style="margin-top:16px">
+    <div class="ann-header">backend/app/core/security.py — password section</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">from</span> passlib.context <span class="kw">import</span> CryptContext
+<span class="fn">pwd_context</span> = CryptContext(schemes=[<span class="st">"bcrypt"</span>], deprecated=<span class="st">"auto"</span>)</div>
+      <div class="ann-explain"><strong>Create one shared CryptContext.</strong> This object manages hashing. <code>schemes=["bcrypt"]</code> means use bcrypt algorithm. <code>deprecated="auto"</code> means if you ever switch algorithms in the future, old hashes are automatically re-hashed on next login. Always create this once at module level — not inside each function.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">hash_password</span>(plain: str) -> str:
+    <span class="kw">return</span> pwd_context.<span class="fn">hash</span>(plain)</div>
+      <div class="ann-explain"><strong>One-way hash a plain password.</strong> <code>pwd_context.hash("mypassword")</code> returns something like <code>$2b$12$EixZaYVK...</code>. This is what gets stored in the database. The result is different every call (bcrypt adds a random "salt") — two identical passwords produce different hashes. <span class="alt">Why bcrypt and not SHA-256? SHA-256 is fast — designed for data integrity. bcrypt is designed to be slow for exactly this security reason.</span></div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">verify_password</span>(plain: str, hashed: str) -> bool:
+    <span class="kw">return</span> pwd_context.<span class="fn">verify</span>(plain, hashed)</div>
+      <div class="ann-explain"><strong>Check if a plain password matches a stored hash.</strong> passlib extracts the salt from the stored hash, re-hashes the plain password with that salt, and compares. Returns True if they match, False otherwise. Used at login time — you never "decrypt" a bcrypt hash, you only verify a guess against it.</div>
+    </div>
+  </div>
+
+  <h2>JWT tokens</h2>
+  <div class="callout callout-info">
+    <div class="callout-title">What is a JWT?</div>
+    A JWT (JSON Web Token) is a base64-encoded string with three parts separated by dots: <strong>Header.Payload.Signature</strong>. The header says which algorithm was used. The payload contains the data (user ID, role, expiry). The signature is a hash of the header + payload signed with your secret key. Anyone can read the payload — but only someone with the secret key can create a valid signature.
+  </div>
+
+  <div class="annotated">
+    <div class="ann-header">backend/app/core/security.py — JWT section</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">create_access_token</span>(data: dict, expires_delta=<span class="kw">None</span>) -> str:
+    to_encode = data.<span class="fn">copy</span>()
+    expire = datetime.<span class="fn">now</span>(timezone.utc) + (
+        expires_delta <span class="kw">or</span> timedelta(minutes=settings.access_token_expire_minutes)
+    )
+    to_encode.<span class="fn">update</span>({<span class="st">"exp"</span>: expire})
+    <span class="kw">return</span> jwt.<span class="fn">encode</span>(to_encode, settings.jwt_secret_key, algorithm=<span class="st">"HS256"</span>)</div>
+      <div class="ann-explain"><strong>Create a signed JWT token.</strong> We copy the data dict (never mutate the original), add an <code>exp</code> (expiry) timestamp, then call <code>jwt.encode()</code>. The result is a string like <code>eyJhbGci...</code>. <code>data</code> typically contains <code>{"sub": "42", "role": "admin"}</code> — <code>sub</code> is a JWT standard field for the subject (user ID). <span class="alt">HS256 means HMAC-SHA256 — a symmetric algorithm. The same secret key creates AND verifies tokens. For public APIs, RS256 (asymmetric) is more secure.</span></div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">decode_access_token</span>(token: str):
+    <span class="kw">try</span>:
+        payload = jwt.<span class="fn">decode</span>(token, settings.jwt_secret_key, algorithms=[<span class="st">"HS256"</span>])
+        <span class="kw">return</span> payload
+    <span class="kw">except</span> JWTError:
+        <span class="kw">return None</span></div>
+      <div class="ann-explain"><strong>Verify and decode a JWT.</strong> <code>jwt.decode()</code> checks: (1) the signature is valid — token wasn't tampered with, (2) the token hasn't expired. If either check fails, <code>JWTError</code> is raised — we catch it and return None. Callers check for None and raise a 401. <strong>No database call needed</strong> — the signature verification is pure cryptography.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DATABASE.PY ─── -->
+<section class="section" id="sec-database">
+  <div class="page-h"><em>database.py</em></div>
+  <div class="page-sub">SQLAlchemy setup — the engine, session factory, Base class, and get_db dependency.</div>
+  <span class="badge b-amber">Python</span> <span class="badge b-amber">SQLAlchemy</span>
+
+  <h2>The three components</h2>
+  <div class="annotated">
+    <div class="ann-header">backend/app/core/database.py</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="fn">engine</span> = <span class="fn">create_engine</span>(
+    settings.database_url,
+    connect_args={<span class="st">"check_same_thread"</span>: <span class="kw">False</span>}
+)</div>
+      <div class="ann-explain"><strong>The engine manages database connections.</strong> Think of it as the phone line to the database. <code>database_url</code> is <code>sqlite:///./chatbot.db</code> — SQLite creates a file on disk. <code>check_same_thread: False</code> is SQLite-specific — FastAPI's async nature uses multiple threads and this allows it. <span class="alt">For PostgreSQL, remove <code>connect_args</code> entirely and change the URL to <code>postgresql://user:pass@localhost/dbname</code>.</span></div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="fn">SessionLocal</span> = <span class="fn">sessionmaker</span>(<span class="fn">autocommit</span>=<span class="kw">False</span>, <span class="fn">autoflush</span>=<span class="kw">False</span>, <span class="fn">bind</span>=engine)</div>
+      <div class="ann-explain"><strong>SessionLocal is a factory that creates DB sessions.</strong> A session is a "unit of work" — it tracks all changes and commits or rolls them back together. <code>autocommit=False</code> means we manually call <code>db.commit()</code>. <code>autoflush=False</code> means SQLAlchemy doesn't automatically send SQL to the DB until we call commit. This gives us full control.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="fn">Base</span> = <span class="fn">declarative_base</span>()</div>
+      <div class="ann-explain"><strong>Base is the parent class all models inherit from.</strong> SQLAlchemy uses it to track which Python classes map to which database tables. When we call <code>Base.metadata.create_all(engine)</code> in main.py, it scans all Base subclasses and creates their tables if they don't exist yet.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">get_db</span>():
+    db = <span class="fn">SessionLocal</span>()
+    <span class="kw">try</span>:
+        <span class="kw">yield</span> db
+    <span class="kw">finally</span>:
+        db.<span class="fn">close</span>()</div>
+      <div class="ann-explain"><strong>FastAPI dependency that provides a session per request.</strong> This is a generator function (uses <code>yield</code>) which lets FastAPI manage the lifecycle. The <code>finally</code> block guarantees <code>db.close()</code> runs even if an exception is thrown mid-request. Without closing, database connections would leak over time. Route handlers use it as <code>db: Session = Depends(get_db)</code>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── USER MODEL ─── -->
+<section class="section" id="sec-user-model">
+  <div class="page-h"><em>models/user.py</em></div>
+  <div class="page-sub">The User SQLAlchemy model — maps a Python class to the users database table.</div>
+  <span class="badge b-amber">Python</span> <span class="badge b-amber">SQLAlchemy</span>
+
+  <div class="annotated">
+    <div class="ann-header">backend/app/models/user.py</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">class</span> <span class="cls">User</span>(Base):
+    __tablename__ = <span class="st">"users"</span></div>
+      <div class="ann-explain"><strong>Inheriting from Base registers this as a SQLAlchemy model.</strong> <code>__tablename__</code> sets the actual database table name. If you change this string, the table is renamed (after you drop and recreate it). This class is both a Python object AND a blueprint for a database table.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">    id = Column(Integer, primary_key=<span class="kw">True</span>, index=<span class="kw">True</span>)
+    email = Column(String, unique=<span class="kw">True</span>, index=<span class="kw">True</span>, nullable=<span class="kw">False</span>)</div>
+      <div class="ann-explain"><strong>Defining columns.</strong> <code>primary_key=True</code> makes this the unique row identifier — auto-increments. <code>index=True</code> creates a database index for fast lookups. <code>unique=True</code> prevents two users having the same email (enforced at the DB level, not just our code). <code>nullable=False</code> means the column is required — trying to save a User without an email throws a DB error.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">    hashed_password = Column(String, nullable=<span class="kw">False</span>)
+    role = Column(String, default=<span class="st">"user"</span>, nullable=<span class="kw">False</span>)</div>
+      <div class="ann-explain"><strong>Password hash and role.</strong> We store the bcrypt hash, never the plain password. <code>role</code> has <code>default="user"</code> — every new account starts as a regular user. The "least privilege" principle: grant the minimum access by default, elevate manually. Valid roles: <code>"admin"</code>, <code>"user"</code>, <code>"customer"</code>. In Phase 3 this drives the RoleGuard and system prompt selection.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">    created_at = Column(DateTime(timezone=<span class="kw">True</span>), server_default=<span class="fn">func</span>.<span class="fn">now</span>())</div>
+      <div class="ann-explain"><strong>server_default vs default.</strong> <code>server_default=func.now()</code> tells the database to set this timestamp using the database's own clock when inserting a row. This is more reliable than Python's <code>datetime.now()</code> — it doesn't depend on the server's timezone and is consistent even if multiple Python processes are running.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DEPENDENCIES.PY ─── -->
+<section class="section" id="sec-dependencies">
+  <div class="page-h"><em>dependencies.py</em> ★</div>
+  <div class="page-sub">FastAPI's Depends() system — reusable auth guards that run before route handlers.</div>
+  <span class="badge b-purple">Python</span> <span class="badge b-blue">FastAPI</span>
+
+  <div class="callout callout-info">
+    <div class="callout-title">What is a FastAPI Dependency?</div>
+    A dependency is a function you declare with <code>Depends()</code> in a route parameter. FastAPI calls it automatically before your route handler runs. It's like middleware but per-route — only runs for routes that need it. Dependencies can depend on other dependencies, forming a chain.
+  </div>
+
+  <div class="annotated">
+    <div class="ann-header">backend/app/core/dependencies.py</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="fn">bearer_scheme</span> = HTTPBearer(<span class="fn">auto_error</span>=<span class="kw">False</span>)</div>
+      <div class="ann-explain"><strong>HTTPBearer reads the Authorization header automatically.</strong> It expects the format <code>Authorization: Bearer &lt;token&gt;</code>. <code>auto_error=False</code> means it returns <code>None</code> instead of raising a 403 when the header is missing — we raise our own 401 with a better error message. The 403 vs 401 distinction matters: 401 = not authenticated, 403 = authenticated but not authorised.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">get_current_user</span>(
+    credentials = Depends(<span class="fn">bearer_scheme</span>),
+    db: Session = Depends(<span class="fn">get_db</span>),
+) -> User:</div>
+      <div class="ann-explain"><strong>A dependency that depends on other dependencies.</strong> FastAPI resolves the whole chain: it runs <code>bearer_scheme</code> to extract the token, runs <code>get_db</code> to get a DB session, then passes both to <code>get_current_user</code>. You never call these functions yourself — FastAPI's dependency injection system handles it all.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">    <span class="kw">if not</span> credentials:
+        <span class="kw">raise</span> HTTPException(<span class="num">401</span>, <span class="st">"Not authenticated."</span>)
+    payload = <span class="fn">decode_access_token</span>(credentials.credentials)
+    <span class="kw">if</span> payload <span class="kw">is None</span>:
+        <span class="kw">raise</span> HTTPException(<span class="num">401</span>, <span class="st">"Token invalid or expired."</span>)</div>
+      <div class="ann-explain"><strong>Three-step validation.</strong> (1) Was an Authorization header present? (2) Is the JWT signature valid and not expired? (3) Does the user ID in the token match a real user in the DB? All three must pass. Raising <code>HTTPException</code> stops execution immediately — the route handler never runs.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">def</span> <span class="fn">require_role</span>(required_role: str):
+    <span class="kw">def</span> <span class="fn">checker</span>(current_user = Depends(<span class="fn">get_current_user</span>)) -> User:
+        <span class="kw">if</span> current_user.role != required_role:
+            <span class="kw">raise</span> HTTPException(<span class="num">403</span>, <span class="st">"Access denied."</span>)
+        <span class="kw">return</span> current_user
+    <span class="kw">return</span> checker</div>
+      <div class="ann-explain"><strong>Factory function pattern.</strong> <code>require_role("admin")</code> returns a NEW function (<code>checker</code>) that FastAPI can use as a dependency. <code>checker</code> itself depends on <code>get_current_user</code> — so auth is checked first, then role. This is a closure: <code>checker</code> "closes over" the <code>required_role</code> variable. Usage: <code>user = Depends(require_role("admin"))</code>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AUTH SERVICE ─── -->
+<section class="section" id="sec-auth-service">
+  <div class="page-h"><em>auth_service.py</em> ★</div>
+  <div class="page-sub">Business logic for registration and login — the layer between HTTP routes and the database.</div>
+  <span class="badge b-green">Python</span> <span class="badge b-amber">SQLAlchemy</span>
+
+  <div class="callout callout-tip">
+    <div class="callout-title">Why separate service from routes?</div>
+    The route (<code>api/auth.py</code>) handles HTTP — reading the request body, returning the right response code. The service (<code>auth_service.py</code>) handles business rules — how to register, how to validate, what constitutes a valid login. This separation means you could add a CLI command that also registers users by just calling the service function — no HTTP needed.
+  </div>
+
+  <div class="annotated">
+    <div class="ann-header">backend/app/services/auth_service.py — login_user()</div>
+    <div class="ann-line">
+      <div class="ann-code">    INVALID_CREDENTIALS_ERROR = HTTPException(
+        status_code=<span class="num">401</span>,
+        detail=<span class="st">"Incorrect email or password."</span>,
+    )</div>
+      <div class="ann-explain"><strong>Same error for wrong email AND wrong password.</strong> This is intentional security design. If wrong-email returned "email not found" and wrong-password returned "wrong password", an attacker could use different error messages to discover which emails are registered. By returning identical errors, we prevent email enumeration.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">    user = db.<span class="fn">query</span>(User).<span class="fn">filter</span>(User.email == request.email).<span class="fn">first</span>()
+    <span class="kw">if not</span> user:
+        <span class="kw">raise</span> INVALID_CREDENTIALS_ERROR
+    <span class="kw">if not</span> <span class="fn">verify_password</span>(request.password, user.hashed_password):
+        <span class="kw">raise</span> INVALID_CREDENTIALS_ERROR</div>
+      <div class="ann-explain"><strong>SQLAlchemy query chain.</strong> <code>db.query(User)</code> starts a query on the users table. <code>.filter(User.email == email)</code> adds a WHERE clause. <code>.first()</code> returns the first result or None. This translates to SQL: <code>SELECT * FROM users WHERE email = ? LIMIT 1</code>. SQLAlchemy writes the SQL for you — you write Python.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">    token = <span class="fn">create_access_token</span>(data={
+        <span class="st">"sub"</span>: <span class="fn">str</span>(user.id),
+        <span class="st">"role"</span>: user.role,
+        <span class="st">"email"</span>: user.email,
+    })</div>
+      <div class="ann-explain"><strong>What goes in the JWT payload.</strong> <code>sub</code> (subject) is a JWT standard field — we put the user ID here as a string (JWT requires strings). We also include <code>role</code> and <code>email</code> as convenience — the frontend can read these without making another API call. The payload is base64-encoded, not encrypted — don't put sensitive data here.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── API/AUTH.PY ─── -->
+<section class="section" id="sec-api-auth">
+  <div class="page-h"><em>api/auth.py</em></div>
+  <div class="page-sub">The three auth HTTP endpoints: register, login, and /me.</div>
+  <span class="badge b-green">Python</span> <span class="badge b-blue">FastAPI</span>
+
+  <div class="annotated">
+    <div class="ann-header">backend/app/api/auth.py</div>
+    <div class="ann-line">
+      <div class="ann-code">@router.post(<span class="st">"/register"</span>, response_model=UserResponse, status_code=<span class="num">201</span>)
+<span class="kw">async def</span> <span class="fn">register</span>(request: RegisterRequest, db: Session = Depends(<span class="fn">get_db</span>)):
+    new_user = <span class="fn">register_user</span>(request, db)
+    <span class="kw">return</span> new_user</div>
+      <div class="ann-explain"><strong>Thin route — all logic in the service layer.</strong> <code>status_code=201</code> sets the HTTP status to 201 Created (vs. 200 OK) — semantically correct for resource creation. <code>response_model=UserResponse</code> tells FastAPI to serialise the return value using that Pydantic schema, automatically stripping <code>hashed_password</code> and any other field not in UserResponse.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">@router.get(<span class="st">"/me"</span>, response_model=UserResponse)
+<span class="kw">async def</span> <span class="fn">get_me</span>(current_user: User = Depends(<span class="fn">get_current_user</span>)):
+    <span class="kw">return</span> current_user</div>
+      <div class="ann-explain"><strong>The /me endpoint pattern — common in auth systems.</strong> The route handler has literally zero auth logic — <code>Depends(get_current_user)</code> handles everything. If the token is valid, the User object is handed to the function. If not, the function never runs. This endpoint lets the frontend verify the token is still valid and get the latest user data on app load.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── AUTH STORE ─── -->
+<section class="section" id="sec-auth-store">
+  <div class="page-h"><em>authStore.js</em> ★</div>
+  <div class="page-sub">Global auth state with localStorage persistence. The frontend's source of truth for "who is logged in."</div>
+  <span class="badge b-blue">React</span> <span class="badge b-blue">Zustand</span>
+
+  <div class="callout callout-warn">
+    <div class="callout-title">⚠️ Why localStorage for the token?</div>
+    Without localStorage, every browser refresh logs the user out — the token only lives in memory. With localStorage, the token survives refreshes. The downside: localStorage is accessible to JavaScript on the page, making it vulnerable to XSS attacks. For highly sensitive apps, <code>httpOnly</code> cookies are more secure — but for a learning project, localStorage is the standard approach.
+  </div>
+
+  <div class="annotated">
+    <div class="ann-header">frontend/src/store/authStore.js</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">const</span> <span class="fn">loadStoredAuth</span> = () => {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> token = localStorage.<span class="fn">getItem</span>(<span class="st">'auth_token'</span>)
+    <span class="kw">const</span> user  = JSON.<span class="fn">parse</span>(localStorage.<span class="fn">getItem</span>(<span class="st">'auth_user'</span>) || <span class="st">'null'</span>)
+    <span class="kw">return</span> { token, user }
+  } <span class="kw">catch</span> { <span class="kw">return</span> { token: <span class="kw">null</span>, user: <span class="kw">null</span> } }
+}</div>
+      <div class="ann-explain"><strong>Load persisted auth on app startup.</strong> This runs once when the module is first imported. We wrap in try/catch because <code>JSON.parse</code> throws if the stored value is malformed (e.g. if localStorage was partially corrupted). The fallback returns null — the user will need to log in again.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="fn">setAuth</span>: (token, user) => {
+    localStorage.<span class="fn">setItem</span>(<span class="st">'auth_token'</span>, token)
+    localStorage.<span class="fn">setItem</span>(<span class="st">'auth_user'</span>, JSON.<span class="fn">stringify</span>(user))
+    <span class="fn">set</span>({ token, user, error: <span class="kw">null</span>, isLoading: <span class="kw">false</span> })
+  },</div>
+      <div class="ann-explain"><strong>Always save to both localStorage AND Zustand.</strong> localStorage is the persistence layer (survives refresh). Zustand is the reactive layer (triggers React re-renders). You need both: if you only save to localStorage, components don't re-render on login. If you only save to Zustand, a refresh loses the token.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="fn">logout</span>: () => {
+    localStorage.<span class="fn">removeItem</span>(<span class="st">'auth_token'</span>)
+    localStorage.<span class="fn">removeItem</span>(<span class="st">'auth_user'</span>)
+    <span class="fn">set</span>({ token: <span class="kw">null</span>, user: <span class="kw">null</span> })
+  },</div>
+      <div class="ann-explain"><strong>Remove from both layers on logout.</strong> Calling just <code>set({ token: null })</code> would clear Zustand but leave the token in localStorage — the next refresh would log the user back in. Always clear both.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── API/AUTH.JS ─── -->
+<section class="section" id="sec-api-auth-js">
+  <div class="page-h"><em>api/auth.js</em> ★</div>
+  <div class="page-sub">Axios instance with interceptors that automatically attach tokens and handle 401 responses globally.</div>
+  <span class="badge b-blue">JavaScript</span> <span class="badge b-blue">Axios</span>
+
+  <div class="callout callout-info">
+    <div class="callout-title">Interceptors vs manual token attachment</div>
+    Without interceptors, every API call file would need: <code>headers: { Authorization: `Bearer ${token}` }</code>. With the request interceptor, you write it once and every Axios call in the whole app gets the token automatically. The response interceptor catches 401s globally — one place to handle "your session expired."
+  </div>
+
+  <div class="annotated">
+    <div class="ann-header">frontend/src/api/auth.js</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">export const</span> <span class="fn">apiClient</span> = axios.<span class="fn">create</span>({
+  baseURL: <span class="st">'/api'</span>,
+  headers: { <span class="st">'Content-Type'</span>: <span class="st">'application/json'</span> },
+})</div>
+      <div class="ann-explain"><strong>One shared Axios instance for the entire app.</strong> <code>axios.create()</code> creates a new Axios instance with preset config. All calls using <code>apiClient</code> share the <code>baseURL</code> and headers — you write <code>apiClient.get('/auth/me')</code> instead of the full URL every time. The streaming fetch in <code>api/chat.js</code> doesn't use this because it needs native fetch for ReadableStream support.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">apiClient.interceptors.request.<span class="fn">use</span>((config) => {
+  <span class="kw">const</span> token = useAuthStore.<span class="fn">getState</span>().token
+  <span class="kw">if</span> (token) config.headers.Authorization = <span class="st">`Bearer ${token}`</span>
+  <span class="kw">return</span> config
+})</div>
+      <div class="ann-explain"><strong>Request interceptor: attach JWT to every request.</strong> This runs before every Axios call. <code>useAuthStore.getState()</code> reads Zustand directly (not via hook) — interceptors are outside React components so hooks can't be used here. <code>getState()</code> is Zustand's escape hatch for non-component code. We modify <code>config.headers</code> and must return the config — returning nothing breaks the request.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">apiClient.interceptors.response.<span class="fn">use</span>(
+  (response) => response,
+  (error) => {
+    <span class="kw">if</span> (error.response?.status === <span class="num">401</span>) {
+      useAuthStore.<span class="fn">getState</span>().<span class="fn">logout</span>()
+      window.location.href = <span class="st">'/login'</span>
+    }
+    <span class="kw">return</span> Promise.<span class="fn">reject</span>(error)
+  }
+)</div>
+      <div class="ann-explain"><strong>Response interceptor: global 401 handler.</strong> The first function handles success (pass through). The second handles errors. A 401 means the token expired or was invalidated — we log out and force redirect to login. <code>window.location.href</code> is a hard redirect (reloads the page) rather than React Router's <code>navigate()</code> — this ensures all state is reset. We still call <code>Promise.reject(error)</code> so the original caller can also handle the error if needed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROTECTED ROUTE ─── -->
+<section class="section" id="sec-protected-route">
+  <div class="page-h"><em>ProtectedRoute.jsx</em> ★</div>
+  <div class="page-sub">Redirects unauthenticated users to /login. The React-side gate for private pages.</div>
+  <span class="badge b-blue">React</span> <span class="badge b-purple">React Router</span>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">Security reminder</div>
+    ProtectedRoute is UI-only security. A determined user could remove it from the DOM with browser DevTools. The real security is in the backend — FastAPI's <code>get_current_user</code> dependency rejects any API call without a valid JWT. ProtectedRoute is for user experience, not security enforcement.
+  </div>
+
+  <div class="annotated">
+    <div class="ann-header">frontend/src/guards/ProtectedRoute.jsx</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">export function</span> <span class="fn">ProtectedRoute</span>({ children }) {
+  <span class="kw">const</span> token = <span class="fn">useAuthStore</span>((state) => state.token)
+  <span class="kw">const</span> location = <span class="fn">useLocation</span>()</div>
+      <div class="ann-explain"><strong>Read token from Zustand, current URL from React Router.</strong> We read <code>token</code> (not the whole state) so this component only re-renders when the token changes — not on every store update. <code>useLocation()</code> gives us the current URL path so we can redirect back after login.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="kw">if</span> (!token) {
+    <span class="kw">return</span> &lt;Navigate to=<span class="st">"/login"</span> state={{ from: location }} replace /&gt;
+  }</div>
+      <div class="ann-explain"><strong>Navigate component for declarative redirect.</strong> <code>state={{ from: location }}</code> passes the current path to the login page — after login, <code>useAuth</code> reads <code>location.state?.from?.pathname</code> and redirects back to the original page. <code>replace</code> replaces the browser history entry — so pressing Back after login doesn't go back to the protected page (which would just redirect again).</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="kw">return</span> children
+}</div>
+      <div class="ann-explain"><strong>If authenticated, render the children.</strong> The ProtectedRoute component is transparent when logged in — it just passes through whatever is wrapped inside it. In App.jsx: <code>&lt;ProtectedRoute&gt;&lt;Chat /&gt;&lt;/ProtectedRoute&gt;</code> — if no token, redirect. If token, render Chat.</div>
+    </div>
+  </div>
+
+  <h2>Usage in App.jsx</h2>
+  <div class="code-block">
+    <div class="code-header"><span class="fname">frontend/src/App.jsx — route setup</span></div>
+    <pre>&lt;BrowserRouter&gt;
+  &lt;Routes&gt;
+    <span class="cm">{/* Public — anyone can visit */}</span>
+    &lt;Route path=<span class="st">"/login"</span> element={&lt;Login /&gt;} /&gt;
+
+    <span class="cm">{/* Protected — redirects to /login if no token */}</span>
+    &lt;Route path=<span class="st">"/chat"</span> element={
+      &lt;ProtectedRoute&gt;
+        &lt;Chat /&gt;
+      &lt;/ProtectedRoute&gt;
+    } /&gt;
+
+    <span class="cm">{/* Default redirect */}</span>
+    &lt;Route path=<span class="st">"/"</span> element={&lt;Navigate to=<span class="st">"/chat"</span> replace /&gt;} /&gt;
+  &lt;/Routes&gt;
+&lt;/BrowserRouter&gt;</pre>
+  </div>
+</section>
+
+<!-- ─── ROLE GUARD ─── -->
+<section class="section" id="sec-role-guard">
+  <div class="page-h"><em>RoleGuard.jsx</em></div>
+  <div class="page-sub">Conditionally renders children based on the current user's role. Used for showing/hiding UI elements.</div>
+  <span class="badge b-blue">React</span>
+
+  <div class="annotated">
+    <div class="ann-header">frontend/src/guards/RoleGuard.jsx</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">export function</span> <span class="fn">RoleGuard</span>({ role, roles, children, fallback = <span class="kw">null</span> }) {
+  <span class="kw">const</span> user = <span class="fn">useAuthStore</span>((state) => state.user)
+  <span class="kw">if</span> (!user) <span class="kw">return</span> fallback</div>
+      <div class="ann-explain"><strong>Accepts either a single role or an array of roles.</strong> <code>role="admin"</code> for one role, <code>roles={["admin","user"]}</code> for multiple. <code>fallback</code> is what renders when access is denied — defaults to null (renders nothing). You could pass a "Upgrade to Pro" message as the fallback.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="kw">const</span> allowedRoles = roles || (role ? [role] : [])
+  <span class="kw">const</span> isAllowed = allowedRoles.<span class="fn">includes</span>(user.role)
+  <span class="kw">if</span> (!isAllowed) <span class="kw">return</span> fallback
+  <span class="kw">return</span> children
+}</div>
+      <div class="ann-explain"><strong>Normalise to an array, then check inclusion.</strong> Whether you pass <code>role="admin"</code> or <code>roles={["admin"]}</code>, the check is the same: is <code>user.role</code> in the allowed list? Returns children if yes, fallback if no. Usage: <code>&lt;RoleGuard role="admin"&gt;&lt;AdminPanel /&gt;&lt;/RoleGuard&gt;</code>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── USE AUTH ─── -->
+<section class="section" id="sec-use-auth">
+  <div class="page-h"><em>useAuth.js</em></div>
+  <div class="page-sub">Custom hook connecting authStore + API calls into one clean interface for components.</div>
+  <span class="badge b-blue">React</span>
+
+  <div class="annotated">
+    <div class="ann-header">frontend/src/hooks/useAuth.js</div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="kw">const</span> from = location.state?.from?.pathname || <span class="st">'/chat'</span></div>
+      <div class="ann-explain"><strong>The "redirect back" pattern.</strong> When ProtectedRoute redirects to /login, it passes the original URL in <code>location.state.from</code>. Here we read it: if state exists, go back there after login; otherwise default to /chat. The <code>?.</code> optional chaining prevents errors if state or from is undefined.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code">  <span class="kw">const</span> <span class="fn">handleLogin</span> = <span class="fn">useCallback</span>(<span class="kw">async</span> (email, password) => {
+    <span class="fn">setLoading</span>(<span class="kw">true</span>)
+    <span class="fn">clearError</span>()
+    <span class="kw">try</span> {
+      <span class="kw">const</span> data = <span class="kw">await</span> <span class="fn">login</span>(email, password)
+      <span class="fn">setAuth</span>(data.access_token, { id: data.user_id, role: data.role, email })
+      <span class="fn">navigate</span>(from, { replace: <span class="kw">true</span> })
+    } <span class="kw">catch</span> (err) {
+      <span class="fn">setError</span>(err.response?.data?.detail || <span class="st">'Login failed.'</span>)
+    }
+  }, [...])</div>
+      <div class="ann-explain"><strong>The full login flow in one function.</strong> Set loading → clear previous error → call API → on success: save auth, navigate. On failure: show the error from FastAPI's response body (<code>err.response?.data?.detail</code>). The optional chaining handles network errors where <code>err.response</code> may be undefined. <code>useCallback</code> memoises the function so it doesn't recreate on every render.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── LOGIN PAGE ─── -->
+<section class="section" id="sec-login-page">
+  <div class="page-h"><em>Login.jsx</em> & <em>App.jsx</em></div>
+  <div class="page-sub">Login/register form page and the updated App root with React Router.</div>
+  <span class="badge b-blue">React</span> <span class="badge b-purple">React Router</span>
+
+  <h2>Login.jsx key patterns</h2>
+  <div class="annotated">
+    <div class="ann-header">frontend/src/pages/Login.jsx</div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">const</span> [mode, setMode] = <span class="fn">useState</span>(<span class="st">'login'</span>)
+<span class="kw">const</span> [email, setEmail]       = <span class="fn">useState</span>(<span class="st">''</span>)
+<span class="kw">const</span> [password, setPassword] = <span class="fn">useState</span>(<span class="st">''</span>)</div>
+      <div class="ann-explain"><strong>Local state for the form — not in Zustand.</strong> Form field values only matter on this page. There's no reason to share them globally. Zustand is for state that multiple components need. useState is for state that belongs to one component. This is the right choice here.</div>
+    </div>
+    <div class="ann-line">
+      <div class="ann-code"><span class="kw">const</span> <span class="fn">handleSubmit</span> = <span class="kw">async</span> (e) => {
+  e.<span class="fn">preventDefault</span>()
+  <span class="kw">if</span> (mode === <span class="st">'login'</span>) <span class="kw">await</span> <span class="fn">handleLogin</span>(email, password)
+  <span class="kw">else</span> <span class="kw">await</span> <span class="fn">handleRegister</span>(email, password, fullName)
+}</div>
+      <div class="ann-explain"><strong>e.preventDefault() is critical on form submit.</strong> Without it, the browser does its default form submission — navigates to the URL in the form's action attribute, causing a full page reload. This clears all React state and sends data as a query string. In React, you always prevent default and handle submission yourself with JavaScript.</div>
+    </div>
+  </div>
+
+  <h2>React Router concepts in App.jsx</h2>
+  <table>
+    <tr><th>Component</th><th>What it does</th><th>Phase 1 equivalent</th></tr>
+    <tr><td><code>BrowserRouter</code></td><td>Provides routing context to entire app. Enables history API.</td><td>Nothing — no routing in Phase 1</td></tr>
+    <tr><td><code>Routes</code></td><td>Container for Route definitions. Only renders the matching route.</td><td>—</td></tr>
+    <tr><td><code>Route path="/login"</code></td><td>Maps URL /login to the Login component</td><td>—</td></tr>
+    <tr><td><code>Navigate to="/chat"</code></td><td>Programmatic redirect — like a hyperlink but for routing</td><td>—</td></tr>
+    <tr><td><code>useLocation()</code></td><td>Hook that gives the current URL path + state</td><td>—</td></tr>
+    <tr><td><code>useNavigate()</code></td><td>Hook that lets you programmatically navigate</td><td>—</td></tr>
+  </table>
+</section>
+
+<!-- ─── CHECKLIST ─── -->
+<section class="section" id="sec-checklist">
+  <div class="page-h">Improvement <em>Checklist</em></div>
+  <div class="page-sub">22 tasks to complete before moving to Phase 3. Understanding tasks first, then improvements.</div>
+
+  <div class="prog-card">
+    <div class="prog-emoji" id="prog-emoji">🌱</div>
+    <div class="prog-info">
+      <div class="prog-nums"><span id="prog-text">0 of 22 complete</span><span id="prog-pct">0%</span></div>
+      <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-hdr"><div class="check-group-title">Backend — core understanding</div><span class="badge b-blue">Python</span></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,0)"></div><div class="chk-text" id="ct0">Start the server and check <code>chatbot.db</code> was created in the <code>backend/</code> folder</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,1)"></div><div class="chk-text" id="ct1">Open <code>http://localhost:8000/docs</code> — test <code>POST /api/auth/register</code> directly from Swagger UI</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,2)"></div><div class="chk-text" id="ct2">After registering, use a SQLite viewer (like DB Browser for SQLite) to see your user row with the hashed password</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,3)"></div><div class="chk-text" id="ct3">Test <code>POST /api/auth/login</code> in Swagger — copy the <code>access_token</code> and paste it at <a href="https://jwt.io" target="_blank" style="color:var(--accent)">jwt.io</a> to see the decoded payload</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,4)"></div><div class="chk-text" id="ct4">Test <code>GET /api/auth/me</code> — first without a token (should get 401), then with a token (use the Authorize button in Swagger)</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,5)"></div><div class="chk-text" id="ct5">Add a <code>print(payload)</code> inside <code>decode_access_token()</code> and log in — see the JWT payload printed in the terminal</div></div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-hdr"><div class="check-group-title">Backend — improvements to build</div><span class="badge b-amber">Upgrade</span></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,6)"></div><div class="chk-text" id="ct6">Add password strength validation: require at least one uppercase letter and one number in the <code>RegisterRequest</code> schema</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,7)"></div><div class="chk-text" id="ct7">Add a <code>PATCH /api/auth/me</code> route that lets the logged-in user update their <code>full_name</code></div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,8)"></div><div class="chk-text" id="ct8">Add a <code>POST /api/auth/change-password</code> route requiring the current password before allowing a change</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,9)"></div><div class="chk-text" id="ct9">Add an <code>is_admin</code> property to the User model (a Python <code>@property</code> that returns <code>self.role == "admin"</code>)</div></div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-hdr"><div class="check-group-title">Frontend — core understanding</div><span class="badge b-blue">React</span></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,10)"></div><div class="chk-text" id="ct10">Open Application → Local Storage in DevTools — log in and see <code>auth_token</code> and <code>auth_user</code> appear</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,11)"></div><div class="chk-text" id="ct11">While logged in, manually delete <code>auth_token</code> from LocalStorage in DevTools — navigate and see yourself redirected to login</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,12)"></div><div class="chk-text" id="ct12">Open Network tab — log in and find the login request. See the JWT in the response. Then make a chat request and see the <code>Authorization: Bearer</code> header in the request</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,13)"></div><div class="chk-text" id="ct13">Temporarily remove <code>Depends(get_current_user)</code> from the chat route — confirm the chat works without a token, then put it back</div></div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-hdr"><div class="check-group-title">Frontend — improvements to build</div><span class="badge b-amber">Upgrade</span></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,14)"></div><div class="chk-text" id="ct14">Add a "show/hide password" toggle button to the password input in Login.jsx</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,15)"></div><div class="chk-text" id="ct15">Add client-side validation: disable the submit button if email is empty or password is under 8 chars</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,16)"></div><div class="chk-text" id="ct16">Add a loading spinner inside the submit button (replace the text with a spinner SVG when <code>isLoading</code> is true)</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,17)"></div><div class="chk-text" id="ct17">Display the user's role badge in the chat header for all roles (not just admin) with different colors per role</div></div>
+  </div>
+
+  <div class="check-group">
+    <div class="check-group-hdr"><div class="check-group-title">Understanding goals</div><span class="badge b-green">Concepts</span></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,18)"></div><div class="chk-text" id="ct18">Explain out loud the difference between authentication (who are you?) and authorization (what are you allowed to do?)</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,19)"></div><div class="chk-text" id="ct19">Explain why we return the same 401 error for both wrong email AND wrong password</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,20)"></div><div class="chk-text" id="ct20">Explain why ProtectedRoute doesn't provide real security and where the real security lives</div></div>
+    <div class="check-row"><div class="chk" onclick="tick(this,21)"></div><div class="chk-text" id="ct21">Draw the complete login flow on paper — from form submit to JWT stored in localStorage and /chat rendered</div></div>
+  </div>
+</section>
+
+<!-- ─── DEBUG ─── -->
+<section class="section" id="sec-debug">
+  <div class="page-h">Debug <em>Guide</em></div>
+  <div class="page-sub">The 12 most common Phase 2 errors — what causes them and how to fix them.</div>
+  <div class="filter-row" id="filter-btns">
+    <button class="fbtn active" onclick="filterErr('all',this)">All</button>
+    <button class="fbtn" onclick="filterErr('backend',this)">Backend</button>
+    <button class="fbtn" onclick="filterErr('frontend',this)">Frontend</button>
+    <button class="fbtn" onclick="filterErr('auth',this)">Auth</button>
+    <button class="fbtn" onclick="filterErr('db',this)">Database</button>
+  </div>
+  <div id="err-list"></div>
+</section>
+
+<!-- ─── EXERCISES ─── -->
+<section class="section" id="sec-exercises">
+  <div class="page-h">Coding <em>Exercises</em></div>
+  <div class="page-sub">5 features to build yourself. Each one deepens your understanding of Phase 2 concepts.</div>
+  <div class="callout callout-tip">
+    <div class="callout-title">How to approach these</div>
+    Try each exercise without looking at the hint first. Getting stuck and figuring it out is where the real learning happens. The hint is a safety net, not the first step.
+  </div>
+  <div id="ex-list"></div>
+</section>
+
+<!-- ─── QUIZ ─── -->
+<section class="section" id="sec-quiz">
+  <div class="page-h">Self-test <em>Quiz</em></div>
+  <div class="page-sub">10 questions on Phase 2. Answer each in your head before revealing. All 10 correct = ready for Phase 3.</div>
+  <div id="quiz-list"></div>
+</section>
+
+<!-- ─── GLOSSARY ─── -->
+<section class="section" id="sec-glossary">
+  <div class="page-h"><em>Glossary</em></div>
+  <div class="page-sub">Every new term introduced in Phase 2, explained simply.</div>
+  <div id="gloss-list"></div>
+</section>
+
+</main>
+</div>
+
+<script>
+// ── Navigation ──────────────────────────────────────────────────────────────
+function go(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Checklist ───────────────────────────────────────────────────────────────
+var checks = {}, TOTAL = 22;
+function tick(box, n) {
+  checks[n] = !checks[n];
+  box.classList.toggle('done', checks[n]);
+  document.getElementById('ct' + n).classList.toggle('done', checks[n]);
+  var done = Object.values(checks).filter(Boolean).length;
+  var pct = Math.round(done / TOTAL * 100);
+  document.getElementById('prog-text').textContent = done + ' of ' + TOTAL + ' complete';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('sp-bar').style.width = pct + '%';
+  document.getElementById('sp-pct').textContent = pct + '%';
+  var e = ['🌱','🌱','🌱','🌱','🌱','🌿','🌿','🌿','🌿','🌿','🌿','🌿','⭐','⭐','⭐','⭐','⭐','⭐','⭐','⭐','🔐','🔐','🎉'];
+  document.getElementById('prog-emoji').textContent = e[done] || '🎉';
+}
+
+// ── Debug errors ─────────────────────────────────────────────────────────────
+var errors = [
+  { cat:'db', title:'chatbot.db not created on startup', desc:'The SQLite database file isn\'t being created. Usually means the models weren\'t imported before create_all() was called.', fix:'In <code>main.py</code>, make sure you have <code>import app.models.user</code> BEFORE <code>Base.metadata.create_all(bind=engine)</code>. SQLAlchemy only creates tables for models it knows about — importing the module registers it with Base.' },
+  { cat:'auth', title:'401 Unauthorized on /api/auth/me even with a token', desc:'You\'re sending a token but FastAPI returns 401. The header format might be wrong or the token is expired.', fix:'Check the Authorization header format exactly: <code>Bearer eyJhbGci...</code> — note the capital B and single space. The token must not have quotes around it. Also check that <code>JWT_SECRET_KEY</code> in your .env matches what was used to create the token (happens if you change the secret after creating tokens).' },
+  { cat:'auth', title:'Token in localStorage but user gets redirected to /login on refresh', desc:'After refresh, React reads the token from localStorage but still redirects to login.', fix:'The token is there but authStore isn\'t loading it correctly. Check <code>loadStoredAuth()</code> in authStore.js — open browser DevTools → Application → Local Storage and confirm <code>auth_token</code> is present. Also verify <code>const stored = loadStoredAuth()</code> runs at module level (outside the create() call) so it runs on import.' },
+  { cat:'backend', title:'sqlalchemy.exc.IntegrityError on register', desc:'Registration fails with an IntegrityError. This means a database constraint was violated.', fix:'Usually means the email already exists (<code>unique=True</code> constraint on the email column). This should be caught by auth_service checking for duplicates before inserting — verify <code>db.query(User).filter(User.email == request.email).first()</code> runs before <code>db.add(new_user)</code>. If the check is there but the error still occurs, it might be a race condition — the HTTPException should catch it.' },
+  { cat:'frontend', title:'Axios interceptor not attaching the token', desc:'Network requests go out without the Authorization header despite being logged in.', fix:'Check you\'re using <code>apiClient</code> (the shared instance with interceptors) and not a bare <code>axios.get()</code> call. Bare axios calls don\'t go through the interceptors. Also verify <code>useAuthStore.getState().token</code> returns a value — open DevTools and run <code>localStorage.getItem("auth_token")</code> to confirm it\'s there.' },
+  { cat:'auth', title:'422 Unprocessable Entity on login or register', desc:'FastAPI returns a 422. The request body doesn\'t match the Pydantic schema.', fix:'Check the JSON body shape: login needs <code>{"email": "...", "password": "..."}</code>. Register needs the same plus optionally <code>"full_name"</code>. The 422 response body contains a <code>detail</code> array showing exactly which field failed — log <code>error.response.data</code> in the catch block to read it.' },
+  { cat:'frontend', title:'ProtectedRoute redirects even when logged in', desc:'You\'re logged in but every /chat visit redirects to /login.', fix:'The token is null in Zustand even though it\'s in localStorage. Check that <code>loadStoredAuth()</code> is called at module import and its return value is used as the initial state in <code>create()</code>. A common mistake: defining the function but not calling it, or calling it inside create() where it runs after initial state is set.' },
+  { cat:'backend', title:'ModuleNotFoundError for jose or passlib', desc:'Python can\'t find the new Phase 2 packages.', fix:'You\'re either not in the virtual environment or forgot to install. Run: <code>source venv/bin/activate</code> then <code>pip install -r requirements.txt</code>. Verify with <code>pip list | grep jose</code>. If you installed globally instead of in the venv, the packages won\'t be found when running uvicorn inside the venv.' },
+  { cat:'frontend', title:'React Router: "useNavigate() may be used only in the context of a Router component"', desc:'Calling useNavigate or useLocation outside of BrowserRouter context throws this error.', fix:'Make sure <code>BrowserRouter</code> wraps your entire App. Check App.jsx — the <code>&lt;BrowserRouter&gt;</code> must be the outermost component wrapping the <code>&lt;Routes&gt;</code>. Also verify <code>useAuth</code> hook is only called inside components that are rendered within the BrowserRouter tree — not at module level.' },
+  { cat:'auth', title:'Login succeeds but user is not redirected to /chat', desc:'The login API call returns a token but the page stays on /login.', fix:'Check the <code>navigate(from, { replace: true })</code> call in <code>handleLogin</code> in useAuth.js. Verify <code>from</code> is set correctly — add <code>console.log("navigating to:", from)</code>. Also ensure <code>useNavigate</code> and <code>useLocation</code> are imported from <code>react-router-dom</code> (not react-router). If using React Router v5, the API is different — we use v6.' },
+  { cat:'db', title:'OperationalError: no such table: users', desc:'SQLAlchemy can\'t find the users table. The DB exists but the table wasn\'t created.', fix:'The User model wasn\'t imported before <code>create_all</code> ran. In main.py, add <code>import app.models.user</code> at the top. Also check that <code>Base.metadata.create_all(bind=engine)</code> uses the same <code>engine</code> that was used to create the User model\'s Base — they must both be from <code>app.core.database</code>.' },
+  { cat:'auth', title:'JWTError: Signature verification failed', desc:'decode_access_token returns None for a token that should be valid.', fix:'The JWT_SECRET_KEY doesn\'t match. This happens when you change the secret key after creating tokens — existing tokens signed with the old key fail verification. Either regenerate a fresh token by logging in again, or confirm the <code>JWT_SECRET_KEY</code> in .env matches what was used when the token was created. Also check for whitespace in the .env value.' },
+];
+
+function filterErr(cat, btn) {
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  var list = document.getElementById('err-list');
+  list.innerHTML = '';
+  var filtered = cat === 'all' ? errors : errors.filter(e => e.cat === cat);
+  filtered.forEach(function(err) {
+    var catColors = { backend:'b-blue', frontend:'b-amber', auth:'b-purple', db:'b-green' };
+    var div = document.createElement('div');
+    div.className = 'err-card';
+    div.innerHTML = '<div class="err-head" onclick="this.parentElement.classList.toggle(\'open\')"><div class="err-title"><span class="badge ' + (catColors[err.cat]||'b-blue') + '">' + err.cat + '</span>' + err.title + '</div><span class="err-chev">▼</span></div><div class="err-body"><div class="err-desc">' + err.desc + '</div><div class="fix-box"><div class="fix-title">Fix</div><div class="fix-text">' + err.fix + '</div></div></div>';
+    list.appendChild(div);
+  });
+}
+filterErr('all', document.querySelector('.fbtn.active'));
+
+// ── Exercises ────────────────────────────────────────────────────────────────
+var exercises = [
+  {
+    num:'01', title:'Add a "remember me" checkbox to the login form', level:'Easy', lc:'b-green',
+    desc:'Add a checkbox labelled "Remember me" to the login form. When unchecked, store the token in <code>sessionStorage</code> (clears when browser tab closes) instead of <code>localStorage</code> (persists forever).',
+    files:'<code>Login.jsx</code> (checkbox state) · <code>authStore.js</code> (conditional storage)',
+    learn:'sessionStorage vs localStorage, passing options through to the store, controlled checkbox input',
+    hint:'Add <code>const [remember, setRemember] = useState(true)</code> to Login.jsx and a checkbox that toggles it. Pass <code>remember</code> as a third argument to <code>handleLogin(email, password, remember)</code>. In <code>setAuth</code> in authStore, accept a <code>persist</code> param and use <code>sessionStorage</code> when <code>persist=false</code>. The logout function should also clear both storages.'
+  },
+  {
+    num:'02', title:'Add a token expiry indicator in the chat header', level:'Easy', lc:'b-green',
+    desc:'Show how long until the JWT token expires (e.g. "Session expires in 47 min"). Decode the <code>exp</code> field from the token to calculate the remaining time. Update it every minute.',
+    files:'<code>authStore.js</code> (expose token) · <code>Chat.jsx</code> (decode and display)',
+    learn:'Reading JWT payload in the browser, the Date API, setInterval for periodic updates',
+    hint:'In Chat.jsx, read the token from authStore. A JWT payload is in the middle section (between the first and second dot). Use <code>JSON.parse(atob(token.split(".")[1]))</code> to decode it — the <code>exp</code> field is a Unix timestamp in seconds. Calculate remaining minutes with <code>Math.round((exp * 1000 - Date.now()) / 60000)</code>. Use <code>useEffect</code> with <code>setInterval</code> to update every 60 seconds. Clear the interval on unmount to prevent memory leaks.'
+  },
+  {
+    num:'03', title:'Add email confirmation on the register form', level:'Medium', lc:'b-blue',
+    desc:'Add a "Confirm email" field to the registration form. Validate client-side that both email fields match before submitting. Show an inline error message if they don\'t match.',
+    files:'<code>Login.jsx</code> only',
+    learn:'Cross-field validation, derived state (validation result depends on two state values), inline error display',
+    hint:'Add <code>const [confirmEmail, setConfirmEmail] = useState("")</code>. Derive a validation flag: <code>const emailMismatch = confirmEmail.length > 0 && email !== confirmEmail</code>. Show a small red text below the confirm field when <code>emailMismatch</code> is true. Disable the submit button when <code>emailMismatch</code> is true. Only show the confirm field in register mode.'
+  },
+  {
+    num:'04', title:'Protect a route by role — add an /admin route', level:'Medium', lc:'b-blue',
+    desc:'Add a simple admin-only page at <code>/admin</code>. It should show a list of all registered users (fetched from a new backend route). If a non-admin visits /admin, redirect them to /chat.',
+    files:'Backend: <code>api/admin.py</code> (new file) + <code>main.py</code> · Frontend: <code>pages/Admin.jsx</code> + <code>App.jsx</code>',
+    learn:'Creating a new protected route, require_role() dependency, RoleGuard vs ProtectedRoute, fetching data with useEffect',
+    hint:'Backend: create <code>api/admin.py</code> with <code>@router.get("/users")</code> using <code>Depends(require_role("admin"))</code> — return <code>db.query(User).all()</code>. Register in main.py with <code>prefix="/api/admin"</code>. Frontend: create <code>Admin.jsx</code> that fetches <code>/api/admin/users</code> in a useEffect on mount. In App.jsx, add a route: <code>&lt;Route path="/admin" element={&lt;ProtectedRoute&gt;&lt;RoleGuard role="admin" fallback={&lt;Navigate to="/chat" /&gt;}&gt;&lt;Admin /&gt;&lt;/RoleGuard&gt;&lt;/ProtectedRoute&gt;} /&gt;</code>.'
+  },
+  {
+    num:'05', title:'Implement logout everywhere — handle token expiry gracefully', level:'Challenge', lc:'b-amber',
+    desc:'Currently if a token expires mid-session, the next API call returns 401 and the Axios interceptor forces a hard redirect. Make this smoother: show a modal saying "Your session has expired. Please log in again." with a button that takes the user to login.',
+    files:'<code>authStore.js</code> (add sessionExpired state) · <code>api/auth.js</code> (update interceptor) · <code>App.jsx</code> (show modal)',
+    learn:'Global UI state, modal rendering from a non-component context, coordinating between Axios interceptors and React components',
+    hint:'Add <code>sessionExpired: false</code> and <code>setSessionExpired: (v) => set({ sessionExpired: v })</code> to authStore. In the Axios 401 interceptor, instead of hard redirecting, call <code>useAuthStore.getState().logout()</code> and <code>useAuthStore.getState().setSessionExpired(true)</code>. In App.jsx, read <code>sessionExpired</code> from the store and conditionally render a modal overlay. The modal\'s "Log in" button calls <code>setSessionExpired(false)</code> then navigates to /login.'
+  }
+];
+
+var exList = document.getElementById('ex-list');
+exercises.forEach(function(ex) {
+  var div = document.createElement('div');
+  div.className = 'ex-card';
+  div.innerHTML = '<div class="ex-head" onclick="this.parentElement.classList.toggle(\'open\')"><div class="ex-left"><span class="ex-num">' + ex.num + '</span><span class="ex-title">' + ex.title + '</span></div><div style="display:flex;align-items:center;gap:8px"><span class="badge ' + ex.lc + '">' + ex.level + '</span><span class="ex-chev">▼</span></div></div><div class="ex-body"><p style="margin-bottom:12px">' + ex.desc + '</p><div class="ex-meta"><div class="meta-box"><div class="meta-lbl">Files</div><div class="meta-val">' + ex.files + '</div></div><div class="meta-box"><div class="meta-lbl">What you learn</div><div class="meta-val">' + ex.learn + '</div></div></div><button class="hint-btn" onclick="var b=this.nextElementSibling;var o=b.style.display===\'block\';b.style.display=o?\'none\':\'block\';this.textContent=o?\'Show hint\':\'Hide hint\'">Show hint</button><div class="hint-box">' + ex.hint + '</div></div>';
+  exList.appendChild(div);
+});
+
+// ── Quiz ─────────────────────────────────────────────────────────────────────
+var quizData = [
+  { q:'What are the three parts of a JWT and what does each contain?', a:'A JWT has three base64-encoded parts separated by dots: (1) Header — the algorithm used (e.g. HS256) and token type. (2) Payload — the data you stored (user ID, role, expiry timestamp). (3) Signature — a hash of header + payload signed with the secret key. The header and payload are readable by anyone — they\'re just base64, not encrypted. Only the signature proves authenticity.' },
+  { q:'Why do we call db.commit() after db.add() in register_user()? What happens if we forget?', a:'<code>db.add(user)</code> tells SQLAlchemy to track the new object in memory. <code>db.commit()</code> actually writes it to the database in a transaction. Without commit, the data exists in the session but not in the database — it disappears when the session closes. <code>db.refresh(user)</code> after commit re-reads the record so auto-generated values (like id and created_at) are available in the Python object.' },
+  { q:'What is the difference between ProtectedRoute and RoleGuard? When would you use each?', a:'ProtectedRoute checks if the user is authenticated at all (has a token). If not, it redirects to /login. Use it to gate entire pages. RoleGuard checks if the authenticated user has a specific role. If not, it renders nothing (or a fallback). Use it to show/hide UI elements within a page. A page can be protected (ProtectedRoute) while individual sections on it are role-guarded (RoleGuard).' },
+  { q:'Why does get_db() use yield instead of return? What happens in the finally block?', a:'Using yield makes get_db() a generator, which FastAPI uses to manage the session lifecycle. FastAPI runs the code up to yield, passes the session to the route handler, waits for the route to finish, then resumes get_db() from after the yield — executing the finally block. The finally block calls db.close(), which is guaranteed to run even if an exception was raised in the route handler. With return, there\'d be no way to run cleanup code after the route finishes.' },
+  { q:'What does useAuthStore.getState() do and why is it used in the Axios interceptor instead of the useAuthStore() hook?', a:'<code>useAuthStore.getState()</code> reads the current Zustand state synchronously outside of a React component. The regular <code>useAuthStore()</code> hook can only be called inside React function components (React hooks rules). Axios interceptors run as plain JavaScript — not inside React components — so hooks can\'t be used there. <code>getState()</code> is Zustand\'s escape hatch for non-component code like interceptors, event listeners, and utility functions.' },
+  { q:'What is email enumeration and how does auth_service.login_user() prevent it?', a:'Email enumeration is when an attacker can tell if an email is registered by trying to log in and reading the error message: "email not found" vs "wrong password." By returning the exact same error for both ("Incorrect email or password"), an attacker can\'t distinguish between the two. They can\'t build a list of registered emails even with automated attempts. This is a standard security practice called error message normalisation.' },
+  { q:'Why does create_access_token() receive a dict parameter instead of individual user fields?', a:'Flexibility and forward compatibility. Today we pass <code>{"sub": user.id, "role": user.role}</code>. Tomorrow we might want to add <code>"permissions": [...] </code> or <code>"org_id": x</code>. A dict parameter means the function doesn\'t need to change — callers just add new keys. If we had individual parameters (<code>create_access_token(user_id, role)</code>), every new field would require a function signature change.' },
+  { q:'What is the purpose of Base.metadata.create_all() in main.py? When would it be a problem in production?', a:'<code>create_all()</code> scans all SQLAlchemy models that inherit from Base and creates their corresponding tables if they don\'t exist. It\'s safe to call repeatedly — it won\'t drop existing tables or lose data. The problem in production: it can\'t ALTER existing tables (add columns, rename fields). If you add a column to User, create_all() won\'t update the table. Production uses Alembic migration files that version-control schema changes — we add this in Phase 4.' },
+  { q:'What happens if you remove the replace prop from the Navigate component in ProtectedRoute?', a:'Without <code>replace</code>, React Router PUSHES a new entry to the browser history. So the history stack looks like: /chat → /login. If the user then logs in and navigates forward, pressing Back goes to /login (which immediately redirects to /chat again — an infinite loop). With <code>replace={true}</code>, the /chat entry is replaced by /login in the history stack. After login, Back goes to whatever was before /chat (probably a blank page or external site).' },
+  { q:'Explain the Axios interceptor chain: what is config, what must you return from a request interceptor, and what happens if you don\'t?', a:'The request interceptor receives the <code>config</code> object — it contains the URL, method, headers, body, etc. You MUST return <code>config</code> (modified or unchanged). If you forget to return it, Axios receives undefined as the config and the request fails with a confusing TypeError. A common bug: modifying config.headers but forgetting the return statement at the end of the interceptor function.' }
+];
+
+var qList = document.getElementById('quiz-list');
+quizData.forEach(function(item, i) {
+  var d = document.createElement('div');
+  d.className = 'qa-item';
+  d.innerHTML = '<div class="qa-q" onclick="this.parentElement.classList.toggle(\'open\')"><span class="qa-num">Q' + String(i+1).padStart(2,'0') + '</span><span class="qa-text">' + item.q + '</span><span class="qa-chev">▼</span></div><div class="qa-ans">' + item.a + '</div>';
+  qList.appendChild(d);
+});
+
+// ── Glossary ─────────────────────────────────────────────────────────────────
+var glossary = [
+  ['Authentication', 'Proving who you are — "I am user 42." Handled by the login flow and JWT verification.'],
+  ['Authorization', 'Proving what you can do — "User 42 can access admin routes." Handled by require_role() and RoleGuard.'],
+  ['bcrypt', 'A one-way password hashing algorithm designed to be slow. You can never recover the original password — only verify a guess against the stored hash.'],
+  ['BrowserRouter', 'React Router component that provides routing context to all child components. Enables hooks like useNavigate and useLocation.'],
+  ['CryptContext', 'passlib class that manages password hashing schemes. Abstracts bcrypt so you can switch algorithms without rewriting validation logic.'],
+  ['Depends()', 'FastAPI\'s dependency injection decorator. Declares that a route parameter should be provided by running another function first.'],
+  ['Email enumeration', 'A security attack where different error messages for wrong email vs. wrong password reveal which emails are registered.'],
+  ['HTTPBearer', 'FastAPI utility that extracts the JWT string from the Authorization: Bearer header automatically.'],
+  ['JWT (JSON Web Token)', 'A signed base64-encoded string containing user data. Three parts: header, payload, signature. Anyone can read the payload; only the secret key can create/verify the signature.'],
+  ['localStorage', 'Browser storage that persists data between sessions (survives tab close and browser restart). Used to store the JWT token so users stay logged in after refresh.'],
+  ['Least privilege', 'Security principle: grant the minimum access needed. In our app, new accounts default to role="user" — the safest option.'],
+  ['Pydantic field_validator', 'Decorator that adds custom validation logic to a Pydantic model field. Runs automatically during model creation. Raising ValueError returns a 422 error.'],
+  ['ProtectedRoute', 'A React component that checks for a JWT token and redirects to /login if absent. Guards entire pages.'],
+  ['RoleGuard', 'A React component that shows/hides children based on the current user\'s role. Guards UI elements within a page.'],
+  ['Salt (bcrypt)', 'A random value added to a password before hashing. Makes identical passwords produce different hashes. Prevents rainbow table attacks.'],
+  ['sessionStorage', 'Like localStorage but cleared when the browser tab closes. Useful for "don\'t remember me" login scenarios.'],
+  ['SQLAlchemy ORM', 'Python ORM that maps Python classes to database tables. Lets you write Python queries instead of raw SQL.'],
+  ['SQLAlchemy Session', 'A unit of work that tracks all database changes and commits or rolls them back together. One session per HTTP request.'],
+  ['sub (JWT claim)', 'Standard JWT field for "subject" — the entity the token is about. We use it to store the user ID.'],
+  ['useCallback', 'React hook that memoises a function, returning the same reference across renders unless dependencies change. Prevents unnecessary re-renders.'],
+  ['useLocation()', 'React Router hook that returns the current URL location object including pathname, search, and state. Used to pass the original URL through the login redirect.'],
+  ['useNavigate()', 'React Router hook that returns a navigate() function for programmatic navigation. Used to redirect after login/logout.'],
+];
+
+var gList = document.getElementById('gloss-list');
+glossary.sort((a,b) => a[0].localeCompare(b[0])).forEach(function(item) {
+  var d = document.createElement('div');
+  d.className = 'gloss-item';
+  d.innerHTML = '<div class="gloss-term">' + item[0] + '</div><div class="gloss-def">' + item[1] + '</div>';
+  gList.appendChild(d);
+});
+</script>
+</body>
+</html>
